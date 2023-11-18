@@ -15,6 +15,9 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.animation.TranslateTransition;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -22,12 +25,13 @@ import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
 import java.util.logging.Level;
+import javafx.util.Duration;
 
 public class Main extends Application implements EventHandler<KeyEvent>, GameEngine.OnAction {
 
     private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
     private int level = 0;
-    private double xBreak = 0.0f;
+    private double xBreak = (500 - 130) / 2.0;
     private double centerBreakX;
     private double yBreak = 640.0f;
 
@@ -51,7 +55,7 @@ public class Main extends Application implements EventHandler<KeyEvent>, GameEng
 
     private int destroyedBlockCount = 0;
 
-    private int  heart    = 100000000;
+    private int  heart    = 100;
     private int  score    = 0;
     private long time     = 0;
     private long hitTime  = 0;
@@ -63,20 +67,21 @@ public class Main extends Application implements EventHandler<KeyEvent>, GameEng
 
     private ArrayList<Block> blocks = new ArrayList<Block>();
     private ArrayList<Bonus> chocos = new ArrayList<Bonus>();
+    private ArrayList<Bomb> bombs = new ArrayList<>();
     private Color[]          colors = new Color[]{
-            Color.MAGENTA,
-            Color.RED,
-            Color.GOLD,
-            Color.CORAL,
-            Color.AQUA,
-            Color.VIOLET,
-            Color.GREENYELLOW,
-            Color.ORANGE,
-            Color.PINK,
-            Color.SLATEGREY,
-            Color.YELLOW,
-            Color.TOMATO,
-            Color.TAN,
+            Color.rgb(64, 224, 208),   // Turquoise
+            Color.rgb(255, 105, 180),  // Hot Pink
+            Color.rgb(143, 0, 255),    // Electric Violet
+            Color.rgb(57, 255, 20),    // Neon Green
+            Color.rgb(255, 69, 0),     // Sunset Orange
+            Color.rgb(135, 206, 235),  // Sky Blue
+            Color.rgb(255, 247, 0),    // Lemon Yellow
+            Color.rgb(0, 163, 232),   // Bright Blue
+            Color.rgb(158, 196, 0),   // Lime Green
+            Color.rgb(255, 127, 39),  // Vibrant Orange
+            Color.rgb(111, 45, 168),  // Deep Purple
+            Color.rgb(237, 28, 36),   // Bright Red
+            Color.rgb(255, 242, 0),   // Sunny Yellow
     };
     public  Pane             root;
     private Label            scoreLabel;
@@ -122,7 +127,8 @@ public class Main extends Application implements EventHandler<KeyEvent>, GameEng
         levelLabel = new Label("Level: " + level);
         levelLabel.setTranslateY(20);
         heartLabel = new Label("Heart : " + heart);
-        heartLabel.setTranslateX(sceneWidth - 70);
+        heartLabel.setTranslateX(sceneWidth - 125);
+        heartLabel.setTranslateY(sceneHeigt - 685);
         if (loadFromSave == false) {
             root.getChildren().addAll(rect, ball, scoreLabel, heartLabel, levelLabel, newGame, load);
         } else {
@@ -179,6 +185,17 @@ public class Main extends Application implements EventHandler<KeyEvent>, GameEng
             loadFromSave = false;
         }
 
+        for (Bonus choco : chocos) {
+            if (!choco.taken) {
+                root.getChildren().add(choco.choco);
+            }
+        }
+
+        for (Bomb bomb : bombs) {
+            if (!bomb.taken) {
+                root.getChildren().add(bomb.bomb);
+            }
+        }
 
     }
 
@@ -201,7 +218,9 @@ public class Main extends Application implements EventHandler<KeyEvent>, GameEng
                     }
                 } else if (r % 10 == 3) {
                     type = Block.BLOCK_STAR;
-                } else {
+                } else if (r % 10 == 7) {
+                    type = Block.BLOCK_BOMB;
+                }else {
                     type = Block.BLOCK_NORMAL;
                 }
                 blocks.add(new Block(j, i, colors[r % (colors.length)], type));
@@ -275,7 +294,7 @@ public class Main extends Application implements EventHandler<KeyEvent>, GameEng
         yBall = verticalCenter;
         ball = new Circle();
         ball.setRadius(ballRadius);
-        ball.setFill(new ImagePattern(new Image("ball.png")));
+        ball.setFill(new ImagePattern(new Image("cabbage.png")));
         ball.setCenterX(xBall);
         ball.setCenterY(yBall);
         Random rand = new Random();
@@ -289,8 +308,10 @@ public class Main extends Application implements EventHandler<KeyEvent>, GameEng
         rect.setHeight(breakHeight);
         rect.setX(xBreak);
         rect.setY(yBreak);
+//        rect.setStroke(Color.BLACK);
+//        rect.setStrokeWidth(2);
 
-        ImagePattern pattern = new ImagePattern(new Image("block.jpg"));
+        ImagePattern pattern = new ImagePattern(new Image("break2.png"));
 
         rect.setFill(pattern);
     }
@@ -541,6 +562,7 @@ public class Main extends Application implements EventHandler<KeyEvent>, GameEng
 
         blocks.clear();
         chocos.clear();
+        bombs.clear();
 
         for (BlockSerializable ser : loadSave.blocks) {
             int r = new Random().nextInt(200);
@@ -570,7 +592,6 @@ public class Main extends Application implements EventHandler<KeyEvent>, GameEng
                     isGoldStauts = false;
                     isExistHeartBlock = false;
 
-
                     hitTime = 0;
                     time = 0;
                     goldTime = 0;
@@ -578,6 +599,8 @@ public class Main extends Application implements EventHandler<KeyEvent>, GameEng
                     engine.stop();
                     blocks.clear();
                     chocos.clear();
+                    bombs.clear();
+
                     destroyedBlockCount = 0;
                     start(primaryStage);
 
@@ -607,6 +630,7 @@ public class Main extends Application implements EventHandler<KeyEvent>, GameEng
 
             blocks.clear();
             chocos.clear();
+            bombs.clear();
 
             start(primaryStage);
         } catch (Exception e) {
@@ -631,6 +655,10 @@ public class Main extends Application implements EventHandler<KeyEvent>, GameEng
 
                 for (Bonus choco : chocos) {
                     choco.choco.setY(choco.y);
+                }
+
+                for (Bomb bomb : bombs){
+                    bomb.bomb.setY(bomb.y);
                 }
             }
         });
@@ -665,7 +693,7 @@ public class Main extends Application implements EventHandler<KeyEvent>, GameEng
 
                     if (block.type == Block.BLOCK_STAR) {
                         goldTime = time;
-                        ball.setFill(new ImagePattern(new Image("goldball.png")));
+                        ball.setFill(new ImagePattern(new Image("goldball2.png")));
                         System.out.println("gold ball");
                         root.getStyleClass().add("goldRoot");
                         isGoldStauts = true;
@@ -674,6 +702,19 @@ public class Main extends Application implements EventHandler<KeyEvent>, GameEng
                     if (block.type == Block.BLOCK_HEART) {
                         heart++;
                     }
+
+                    if (block.type == Block.BLOCK_BOMB) {
+                        final Bomb bomb = new Bomb(block.row, block.column);
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                root.getChildren().add(bomb.bomb);
+                                System.out.println("BOMB!");
+                            }
+                        });
+                        bombs.add(bomb);
+                    }
+
 
                     if (hitCode == Block.HIT_RIGHT) {
                         colideToRightBlock = true;
@@ -704,27 +745,36 @@ public class Main extends Application implements EventHandler<KeyEvent>, GameEng
         checkDestroyedCount();
         setPhysicsToBall();
 
-        if (time - goldTime > 5000 && isGoldStauts) {
-            Platform.runLater(() -> {
-                ball.setFill(new ImagePattern(new Image("ball.png")));
-                root.getStyleClass().remove("goldRoot");
-            });
+        List<Bomb> bombsToRemove = new ArrayList<>();
+        for (Bomb bomb : bombs) {
+            bomb.updatePosition();
+            if (bombHitsPaddle(bomb)) {
+                handleBombPaddleCollision(bomb);
+                bombsToRemove.add(bomb);
+            } else if (bomb.y > sceneHeigt) {
+                bombsToRemove.add(bomb);
+            }
+        }
+        bombs.removeAll(bombsToRemove);
+
+        if (time - goldTime > 5000) {
+            ball.setFill(new ImagePattern(new Image("cabbage.png")));
+            root.getStyleClass().remove("goldRoot");
             isGoldStauts = false;
         }
 
-        List<Bonus> toRemove = new ArrayList<>();
+        List<Bonus> chocosToRemove = new ArrayList<>();
         for (Bonus choco : chocos) {
             if (choco.y > sceneHeigt || choco.taken) {
                 continue;
             }
             if (chocoHitsBreak(choco)) {
                 handleChocoHit(choco);
-                toRemove.add(choco);
+                chocosToRemove.add(choco);
             }
             updateChocoPosition(choco);
         }
-
-        chocos.removeAll(toRemove);
+        chocos.removeAll(chocosToRemove);
     }
 
     private boolean chocoHitsBreak(Bonus choco) {
@@ -742,6 +792,31 @@ public class Main extends Application implements EventHandler<KeyEvent>, GameEng
 
     private void updateChocoPosition(Bonus choco) {
         choco.y += ((time - choco.timeCreated) / 1000.000) + 1.000;
+    }
+
+    private boolean bombHitsPaddle(Bomb bomb) {
+        return bomb.y >= yBreak && bomb.y <= yBreak + breakHeight &&
+                bomb.x >= xBreak && bomb.x <= xBreak + breakWidth;
+    }
+
+    private void handleBombPaddleCollision(Bomb bomb) {
+        shakeScreen();
+        rect.setVisible(false);
+        bomb.taken = true;
+        Platform.runLater(() -> root.getChildren().remove(bomb.bomb));
+        new Timeline(new KeyFrame(
+                Duration.seconds(2),
+                e -> rect.setVisible(true)
+        )).play();
+    }
+
+    private void shakeScreen() {
+        TranslateTransition tt = new TranslateTransition(Duration.millis(50), root);
+        tt.setByX(20);
+        tt.setCycleCount(8);
+        tt.setAutoReverse(true);
+        tt.setOnFinished(e -> root.setTranslateX(0));
+        tt.play();
     }
 
     @Override

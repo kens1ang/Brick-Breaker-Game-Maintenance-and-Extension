@@ -1,13 +1,20 @@
 .root {
-    -fx-background-color: #1d1d1d;
+    -fx-background-image: url("test.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: cover;
 }
 
 .goldRoot {
-    -fx-background-color: #4b4a08;
+    -fx-background-image: url("goldbg2.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: cover;
 }
 
 .label {
-    -fx-text-fill: #FFF;
-    -fx-label-padding: 8px;
+    -fx-text-fill: black;
+    -fx-label-padding: 10px;
     -fx-font-size: 15px;
+    -fx-font-family: "Comic Sans MS";
 }
