@@ -33,20 +33,15 @@ public class LoadSave {
     public double           vX;
     public ArrayList<BlockSerializable> blocks = new ArrayList<BlockSerializable>();
 
-
     public void read() {
-
 
         try {
             ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(new File(Main.savePath)));
-
 
             level = inputStream.readInt();
             score = inputStream.readInt();
             heart = inputStream.readInt();
             destroyedBlockCount = inputStream.readInt();
-
-
             xBall = inputStream.readDouble();
             yBall = inputStream.readDouble();
             xBreak = inputStream.readDouble();
@@ -55,8 +50,6 @@ public class LoadSave {
             time = inputStream.readLong();
             goldTime = inputStream.readLong();
             vX = inputStream.readDouble();
-
-
             isExistHeartBlock = inputStream.readBoolean();
             isGoldStauts = inputStream.readBoolean();
             goDownBall = inputStream.readBoolean();
@@ -70,7 +63,6 @@ public class LoadSave {
             colideToLeftBlock = inputStream.readBoolean();
             colideToTopBlock = inputStream.readBoolean();
 
-
             try {
                 blocks = (ArrayList<BlockSerializable>) inputStream.readObject();
             } catch (ClassNotFoundException e) {
@@ -80,6 +72,5 @@ public class LoadSave {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 }

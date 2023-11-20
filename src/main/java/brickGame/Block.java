@@ -4,7 +4,6 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
-
 import java.io.Serializable;
 
 public class Block implements Serializable {
@@ -12,29 +11,21 @@ public class Block implements Serializable {
 
     public int row;
     public int column;
-
-
     public boolean isDestroyed = false;
-
     private Color color;
     public int type;
-
     public double x;
     public double y;
-
     private double width = 100;
     private double height = 30;
     private double paddingTop = height * 2;
     private double paddingH = 50;
     public Rectangle rect;
-
-
     public static double NO_HIT = -1;
     public static double HIT_RIGHT = 0;
     public static double HIT_BOTTOM = 1;
     public static double HIT_LEFT = 2;
     public static double HIT_TOP = 3;
-
     public static int BLOCK_NORMAL = 99;
     public static int BLOCK_CHOCO = 100;
     public static int BLOCK_STAR = 101;
@@ -113,19 +104,15 @@ public class Block implements Serializable {
         return NO_HIT;
     }
 
-
     public static double getPaddingTop() {
         return block.paddingTop;
     }
-
     public static double getPaddingH() {
         return block.paddingH;
     }
-
     public static double getHeight() {
         return block.height;
     }
-
     public static double getWidth() {
         return block.width;
     }

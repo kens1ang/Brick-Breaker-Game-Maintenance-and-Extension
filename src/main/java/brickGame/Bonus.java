@@ -3,13 +3,11 @@ package brickGame;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
-
 import java.io.Serializable;
 import java.util.Random;
 
 public class Bonus implements Serializable {
     public Rectangle choco;
-
     public double x;
     public double y;
     public long timeCreated;
@@ -18,7 +16,6 @@ public class Bonus implements Serializable {
     public Bonus(int row, int column) {
         x = (column * (Block.getWidth())) + Block.getPaddingH() + (Block.getWidth() / 2) - 15;
         y = (row * (Block.getHeight())) + Block.getPaddingTop() + (Block.getHeight() / 2) - 15;
-
         draw();
     }
 
@@ -38,7 +35,4 @@ public class Bonus implements Serializable {
 
         choco.setFill(new ImagePattern(new Image(url)));
     }
-
-
-
 }

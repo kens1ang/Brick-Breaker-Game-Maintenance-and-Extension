@@ -16,8 +16,8 @@ public class Score {
     private static final int GAME_OVER_LABEL_X = 200;
     private static final int GAME_OVER_LABEL_Y = 250;
     private static final int SCALE_FACTOR = 2;
-    private static final int ANIMATION_STEPS = 21;
-    private static final int ANIMATION_DELAY = 15;
+//    private static final int ANIMATION_STEPS = 21;
+//    private static final int ANIMATION_DELAY = 15;
 
     public void show(final double x, final double y, int score, final Main main) {
         String sign = score >= 0 ? "+" : "";
@@ -57,7 +57,6 @@ public class Score {
         timeline.setCycleCount(1);
         timeline.play();
     }
-
 
     public void showGameOver(final Main main) {
         Platform.runLater(() -> {
