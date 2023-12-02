@@ -12,6 +12,20 @@
     -fx-background-size: cover;
 }
 
+.startRoot {
+    -fx-background-image: url("startmenu.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: cover;
+}
+
+.finalRoot {
+    -fx-background-image: url("test.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: cover;
+}
+
 .label {
     -fx-text-fill: black;
     -fx-label-padding: 10px;
