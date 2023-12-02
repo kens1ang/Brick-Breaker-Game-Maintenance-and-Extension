@@ -8,7 +8,6 @@ import java.io.Serializable;
 
 public class Block implements Serializable {
     private static Block block = new Block(-1, -1, Color.TRANSPARENT, 99);
-
     public int row;
     public int column;
     public boolean isDestroyed = false;
@@ -116,5 +115,19 @@ public class Block implements Serializable {
     public static double getWidth() {
         return block.width;
     }
-
+    public int getRow() {
+        return row;
+    }
+    public int getColumn() {
+        return column;
+    }
+    public double getX() {
+        return x;
+    }
+    public double getY() {
+        return y;
+    }
+    public Rectangle getRect() {
+        return rect;
+    }
 }

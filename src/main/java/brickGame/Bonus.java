@@ -35,4 +35,29 @@ public class Bonus implements Serializable {
 
         choco.setFill(new ImagePattern(new Image(url)));
     }
+
+    public double getX() {
+        return x;
+    }
+    public double getY() {
+        return y;
+    }
+    public void addtoY(double add) {
+        y += add;
+    }
+    public long getTimeCreated() {
+        return timeCreated;
+    }
+    public void setTimeCreated(long timeCreated) {
+        this.timeCreated = timeCreated;
+    }
+    public boolean isTaken() {
+        return taken;
+    }
+    public void setTaken(boolean taken) {
+        this.taken = taken;
+    }
+    public Rectangle getChoco() {
+        return choco;
+    }
 }

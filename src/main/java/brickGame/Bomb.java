@@ -37,4 +37,19 @@ public class Bomb implements Serializable{
         bomb.setY(y);
     }
 
+    public Rectangle getBomb() {
+        return bomb;
+    }
+    public double getY() {
+        return y;
+    }
+    public double getX() {
+        return x;
+    }
+    public boolean isTaken() {
+        return taken;
+    }
+    public void setTaken(boolean taken) {
+        this.taken = taken;
+    }
 }
