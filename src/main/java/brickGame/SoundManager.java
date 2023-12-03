@@ -34,7 +34,6 @@ public class SoundManager {
         youwin = loadSound("youwin.mp3");
         backgroundMusic = loadSound("bgmbb.mp3");
         pause = loadSound("pause.mp3");
-        backgroundMusic.setCycleCount(MediaPlayer.INDEFINITE);
         isBackgroundMusicPlaying = false;
     }
 

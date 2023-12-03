@@ -9,21 +9,18 @@ import java.util.logging.Logger;
 
 public class Model {
     private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
-    private Ball ballob;
-    private Paddle paddle;
-    private SoundManager soundManager;
-    private int  heart = 100;
+    private final Ball ballob;
+    private final Paddle paddle;
+    private final SoundManager soundManager;
+    private int  heart = 5;
     private int level = 0;
     private int score = 0;
     private long time = 0;
-    private long hitTime = 0;
     private long goldTime = 0;
-    private int ballRadius = 10;
-    private int sceneWidth = 500;
-    private static int LEFT  = 1;
-    private static int RIGHT = 2;
+    private final int sceneWidth = 500;
+    private static final int LEFT  = 1;
+    private static final int RIGHT = 2;
     private double vX = 2.000;
-    private double vY = 2.000;
     private boolean isGoldStauts                = false;
     private boolean isExistHeartBlock           = false;
     private boolean colideToBreak               = false;
@@ -34,10 +31,10 @@ public class Model {
     private boolean colideToBottomBlock         = false;
     private boolean colideToLeftBlock           = false;
     private boolean colideToTopBlock            = false;
-    private ArrayList<Block> blocks = new ArrayList<Block>();
-    private ArrayList<Bonus> chocos = new ArrayList<Bonus>();
-    private ArrayList<Bomb> bombs = new ArrayList<>();
-    private Color[]          colors = new Color[]{
+    private final ArrayList<Block> blocks = new ArrayList<>();
+    private final ArrayList<Bonus> chocos = new ArrayList<>();
+    private final ArrayList<Bomb> bombs = new ArrayList<>();
+    private final Color[]          colors = new Color[]{
             Color.rgb(64, 224, 208),
             Color.rgb(255, 105, 180),
             Color.rgb(143, 0, 255),
@@ -52,6 +49,7 @@ public class Model {
             Color.rgb(237, 28, 36),
             Color.rgb(255, 242, 0),
     };
+
     public Model() {
         this.paddle = new Paddle();
         this.ballob = new Ball();
@@ -82,68 +80,70 @@ public class Model {
         Random random = new Random();
 
         for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < (level == 18 ? 13 : level + 1); j++) {
+            for (int j = 0; j < calculateBlockCount(); j++) {
                 int r = random.nextInt(500);
-                int type;
-
-                if (level == 18) {
-                    type = Block.BLOCK_BOMB;
-                } else {
-                    if (r % 5 == 0) {
-                        continue;
-                    } else if (r % 10 == 1) {
-                        type = Block.BLOCK_CHOCO;
-                    } else if (r % 10 == 2) {
-                        type = isExistHeartBlock ? Block.BLOCK_NORMAL : Block.BLOCK_HEART;
-                        isExistHeartBlock = true;
-                    } else if (r % 10 == 3) {
-                        type = Block.BLOCK_STAR;
-                    } else if (r % 10 == 7) {
-                        type = Block.BLOCK_BOMB;
-                    } else {
-                        type = Block.BLOCK_NORMAL;
-                    }
-                }
+                int type = determineBlockType(r);
 
                 blocks.add(new Block(j, i, colors[r % (colors.length)], type));
             }
         }
     }
 
+    private int calculateBlockCount() {
+        return (level == 18) ? 13 : level + 1;
+    }
+
+    private int determineBlockType(int randomNumber) {
+        if (level == 18) {
+            return Block.BLOCK_BOMB;
+        } else {
+            if (randomNumber % 5 == 0) {
+                return Block.BLOCK_NORMAL;
+            } else if (randomNumber % 10 == 1) {
+                return Block.BLOCK_CHOCO;
+            } else if (randomNumber % 10 == 2) {
+                return isExistHeartBlock ? Block.BLOCK_NORMAL : Block.BLOCK_HEART;
+            } else if (randomNumber % 10 == 3) {
+                return Block.BLOCK_STAR;
+            } else if (randomNumber % 10 == 7) {
+                return Block.BLOCK_BOMB;
+            } else {
+                return Block.BLOCK_NORMAL;
+            }
+        }
+    }
 
     public void move(final int direction) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                int sleepTime = 4;
-                for (int i = 0; i < 30; i++) {
-                    if (paddle.getxBreak() == (sceneWidth - paddle.getBreakWidth()) && direction == RIGHT) {
-                        return;
-                    }
-                    if (paddle.getxBreak() == 0 && direction == LEFT) {
-                        return;
-                    }
-                    if (direction == RIGHT) {
-                        paddle.addxBreak();
-                    } else {
-                        paddle.minusxBreak();
-                    }
-                    paddle.setCenterBreakX(paddle.getxBreak() + paddle.getHalfBreakWidth());
-                    try {
-                        Thread.sleep(sleepTime);
-                    } catch (InterruptedException e) {
-                        LOGGER.log(Level.SEVERE, "Interrupted Exception in move method", e);
-                        Thread.currentThread().interrupt();
-                    }
-                    if (i >= 20) {
-                        sleepTime = i;
-                    }
+        new Thread(() -> {
+            int sleepTime = 4;
+            for (int i = 0; i < 30; i++) {
+                if (paddle.getxBreak() == (sceneWidth - paddle.getBreakWidth()) && direction == RIGHT) {
+                    return;
+                }
+                if (paddle.getxBreak() == 0 && direction == LEFT) {
+                    return;
+                }
+                if (direction == RIGHT) {
+                    paddle.addxBreak();
+                } else {
+                    paddle.minusxBreak();
+                }
+                paddle.setCenterBreakX(paddle.getxBreak() + paddle.getHalfBreakWidth());
+                try {
+                    Thread.sleep(sleepTime);
+                } catch (InterruptedException e) {
+                    LOGGER.log(Level.SEVERE, "Interrupted Exception in move method", e);
+                    Thread.currentThread().interrupt();
+                }
+                if (i >= 20) {
+                    sleepTime = i;
                 }
             }
         }).start();
     }
 
     public void updateBallPos() {
+        double vY = 2.000;
         if (ballob.isGoDownBall()) {
             ballob.incyBall(vY);
         } else {
@@ -158,7 +158,7 @@ public class Model {
     }
 
     public void handlerightwallcolide() {
-        if (ballob.getxBall() >= sceneWidth - ballRadius) {
+        if (ballob.getxBall() >= sceneWidth - ballob.getBallRadius()) {
             resetCollisionFlags();
             colideToRightWall = true;
             ballob.setGoRightBall(false);
@@ -166,7 +166,7 @@ public class Model {
     }
 
     public void handleleftwallcolide() {
-        if (ballob.getxBall() <= ballRadius) {
+        if (ballob.getxBall() <= ballob.getBallRadius()) {
             resetCollisionFlags();
             colideToLeftWall = true;
             ballob.setGoRightBall(true);
@@ -174,7 +174,7 @@ public class Model {
     }
 
     public void handleceilingcolide() {
-        if (ballob.getyBall() <= ballRadius) {
+        if (ballob.getyBall() <= ballob.getBallRadius()) {
             resetCollisionFlags();
             ballob.setGoDownBall(true);
         }
@@ -192,30 +192,21 @@ public class Model {
     }
 
     public void handlePaddleCollision() {
-        if (ballob.getyBall() >= paddle.getyBreak() - ballRadius && ballob.getyBall() - ballRadius <= paddle.getyBreak() + paddle.getBreakHeight() &&
-                ballob.getxBall() >= paddle.getxBreak() - ballRadius && ballob.getxBall() - ballRadius <= paddle.getxBreak() + paddle.getBreakWidth()) {
-            hitTime = time;
+        if (ballob.getyBall() >= paddle.getyBreak() - ballob.getBallRadius() && ballob.getyBall() - ballob.getBallRadius() <= paddle.getyBreak() + paddle.getBreakHeight() &&
+                ballob.getxBall() >= paddle.getxBreak() - ballob.getBallRadius() && ballob.getxBall() - ballob.getBallRadius() <= paddle.getxBreak() + paddle.getBreakWidth()) {
             resetCollisionFlags();
             colideToBreak = true;
             ballob.setGoDownBall(false);
             updateVelocityOnPaddleCollision();
-            if (ballob.getxBall() - paddle.getCenterBreakX() > 0) {
-                colideToBreakAndMoveToRight = true;
-            } else {
-                colideToBreakAndMoveToRight = false;
-            }
+            colideToBreakAndMoveToRight = ballob.getxBall() - paddle.getCenterBreakX() > 0;
         }
         if (colideToBreak) {
-            if (colideToBreakAndMoveToRight) {
-                ballob.setGoRightBall(true);
-            } else {
-                ballob.setGoRightBall(false);
-            }
+            ballob.setGoRightBall(colideToBreakAndMoveToRight);
         }
     }
 
     public void updateVelocityOnPaddleCollision() {
-        double relation = (ballob.getxBall() - paddle.getCenterBreakX()) / (paddle.getBreakWidth() / 2);
+        double relation = (ballob.getxBall() - paddle.getCenterBreakX()) / ((double) paddle.getBreakWidth() / 2);
 
         if (Math.abs(relation) <= 0.3) {
             vX = Math.abs(relation);
@@ -294,7 +285,7 @@ public class Model {
         }
     }
 
-    public void handlegoldModel() {
+    public void handleremovegoldModel() {
         isGoldStauts = false;
         goldTime = 0;
     }
@@ -369,9 +360,6 @@ public class Model {
     }
     public ArrayList<Bonus> getChocos() {
         return chocos;
-    }
-    public Color[] getColors() {
-        return colors;
     }
     public void setColideToTopBlock(boolean colideToTopBlock) {
         this.colideToTopBlock = colideToTopBlock;
@@ -457,8 +445,7 @@ public class Model {
     public static int getRIGHT() {
         return RIGHT;
     }
-    public void setHitTime(long hitTime) {
-        this.hitTime = hitTime;
+    public Color[] getColors() {
+        return colors;
     }
-
 }
