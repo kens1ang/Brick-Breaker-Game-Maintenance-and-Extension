@@ -1,7 +1,6 @@
 package brickGame;
 
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
@@ -19,14 +18,14 @@ import java.util.logging.Logger;
 public class Controller implements EventHandler<KeyEvent>, GameEngine.OnAction {
     private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
     public static String savePath    = "C:/save/save.mdds";
-    private static String savePathDir = "C:/save/";
-    private Model model;
-    private View view;
+    public static String savePathDir = "C:/save/";
+    private final Model model;
+    private final View view;
     private GameEngine engine;
     Stage primaryStage;
     private boolean loadFromSave = false;
     private boolean leveldone = false;
-    private int sceneHeigt = 700;
+    private final int sceneHeigt = 700;
     private int destroyedBlockCount = 0;
 
     public Controller() {
@@ -51,14 +50,13 @@ public class Controller implements EventHandler<KeyEvent>, GameEngine.OnAction {
                     return;
                 }
                 initBall();
-                initBreak();
+                view.initBreak();
                 model.initBoardModel();
                 view.initstartmenubutton();
             }
 
             view.initroot();
             view.initscene(primaryStage);
-            model.getSoundManager().playBackgroundMusic();
             primaryStage.getScene().setOnKeyPressed(this);
 
             if (!loadFromSave) {
@@ -75,7 +73,6 @@ public class Controller implements EventHandler<KeyEvent>, GameEngine.OnAction {
                 initGameEngine();
                 loadFromSave = false;
             }
-            addbombchoco();
             leveldone = false;
         } catch (Exception e){
             LOGGER.log(Level.SEVERE, "Exception occurred in Controller.start", e);
@@ -83,36 +80,16 @@ public class Controller implements EventHandler<KeyEvent>, GameEngine.OnAction {
     }
 
     private void handleloadnewgamebutton() {
-        view.getLoad().setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                loadGame();
-                view.setLoadvisible(false);
-                view.setNewGamevisible(false);
-            }
+        view.getLoad().setOnAction(event -> {
+            loadGame();
+            view.setLoadvisible(false);
+            view.setNewGamevisible(false);
         });
-        view.getNewGame().setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                initGameEngine();
-                view.setLoadvisible(false);
-                view.setNewGamevisible(false);
-            }
+        view.getNewGame().setOnAction(event -> {
+            initGameEngine();
+            view.setLoadvisible(false);
+            view.setNewGamevisible(false);
         });
-    }
-
-    private void addbombchoco() {
-        for (Bonus choco : model.getChocos()) {
-            if (!choco.isTaken()) {
-                view.root.getChildren().add(choco.getChoco());
-            }
-        }
-
-        for (Bomb bomb : model.getBombs()) {
-            if (!bomb.isTaken()) {
-                view.root.getChildren().add(bomb.getBomb());
-            }
-        }
     }
 
     private void initGameEngine() {
@@ -298,30 +275,26 @@ public class Controller implements EventHandler<KeyEvent>, GameEngine.OnAction {
     }
 
     private void nextLevel() {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    model.setvX(1.000);
-                    engine.stop();
-                    model.resetCollisionFlags();
-                    model.getBallob().setGoDownBall(true);
-                    model.setGoldStauts(false);
-                    model.setExistHeartBlock(false);
-                    model.setHitTime(0);
-                    model.setTime(0);
-                    model.setGoldTime(0);
-                    engine.stop();
-                    model.getBlocks().clear();
-                    model.getChocos().clear();
-                    model.getBombs().clear();
-                    destroyedBlockCount = 0;
-                    leveldone = false;
-                    start(primaryStage);
+        Platform.runLater(() -> {
+            try {
+                model.setvX(1.000);
+                engine.stop();
+                model.resetCollisionFlags();
+                model.getBallob().setGoDownBall(true);
+                model.setGoldStauts(false);
+                model.setExistHeartBlock(false);
+                model.setTime(0);
+                model.setGoldTime(0);
+                engine.stop();
+                model.getBlocks().clear();
+                model.getChocos().clear();
+                model.getBombs().clear();
+                destroyedBlockCount = 0;
+                leveldone = false;
+                start(primaryStage);
 
-                } catch (Exception e) {
-                    LOGGER.log(Level.SEVERE, "Exception occurred in nextLevel", e);
-                }
+            } catch (Exception e) {
+                LOGGER.log(Level.SEVERE, "Exception occurred in nextLevel", e);
             }
         });
     }
@@ -330,7 +303,7 @@ public class Controller implements EventHandler<KeyEvent>, GameEngine.OnAction {
 
         try {
             model.setLevel(0);
-            model.setHeart(3);
+            model.setHeart(5);
             model.setScore(0);
             model.setvX(1.000);
             destroyedBlockCount = 0;
@@ -338,7 +311,6 @@ public class Controller implements EventHandler<KeyEvent>, GameEngine.OnAction {
             model.getBallob().setGoDownBall(true);
             model.setGoldStauts(false);
             model.setExistHeartBlock(false);
-            model.setHitTime(0);
             model.setTime(0);
             model.setGoldTime(0);
             model.getBlocks().clear();
@@ -353,14 +325,12 @@ public class Controller implements EventHandler<KeyEvent>, GameEngine.OnAction {
 
     @Override
     public void onUpdate() {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                view.initView();
-                model.initchocobombModel();
-            }
+        Platform.runLater(() -> {
+            view.initView();
+            model.initchocobombModel();
         });
         handlenotnormalblock();
+        model.getSoundManager().playBackgroundMusic();
     }
 
     private void handlenotnormalblock() {
@@ -407,7 +377,7 @@ public class Controller implements EventHandler<KeyEvent>, GameEngine.OnAction {
         setPhysicsToBall();
 
         handlebombobject();
-        handlegoldtime();
+        handleremovegoldstatus();
         handlebonusobject();
     }
 
@@ -426,9 +396,9 @@ public class Controller implements EventHandler<KeyEvent>, GameEngine.OnAction {
         model.getBombs().removeAll(bombsToRemove);
     }
 
-    private void handlegoldtime() {
+    private void handleremovegoldstatus() {
         if (model.getTime() - model.getGoldTime() > 5000) {
-            model.handlegoldModel();
+            model.handleremovegoldModel();
             view.handleremovegoldView();
         }
     }
@@ -456,9 +426,6 @@ public class Controller implements EventHandler<KeyEvent>, GameEngine.OnAction {
 
     public boolean isLoadFromSave() {
         return loadFromSave;
-    }
-    private void initBreak() {
-        view.initBreakView();
     }
     public Model getModel() {
         return model;
