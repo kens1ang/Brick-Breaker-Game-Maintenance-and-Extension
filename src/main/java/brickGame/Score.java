@@ -3,36 +3,36 @@ package brickGame;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.util.Duration;
 
 public class Score {
 
-    private static final int LABEL_X = 220;
-    private static final int LABEL_Y = 340;
-    private static final int GAME_OVER_LABEL_X = 200;
-    private static final int GAME_OVER_LABEL_Y = 250;
-    private static final int SCALE_FACTOR = 2;
-//    private static final int ANIMATION_STEPS = 21;
-//    private static final int ANIMATION_DELAY = 15;
+    private void setposnsizelabel(Label label) {
+        label.setTranslateY(320);
+        label.setTranslateX(200);
+        label.setScaleX(1);
+        label.setScaleY(1);
+    }
 
-    public void show(final double x, final double y, int score, final Main main) {
+    public void show(final double x, final double y, int score, final View view) {
         String sign = score >= 0 ? "+" : "";
         final Label label = new Label(sign + score);
         label.setTranslateX(x);
         label.setTranslateY(y);
-        Platform.runLater(() -> main.root.getChildren().add(label));
+        Platform.runLater(() -> view.root.getChildren().add(label));
         animateLabel(label);
     }
 
-    public void showMessage(String message, final Main main) {
+    public void showMessage(String message, final View view) {
         final Label label = new Label(message);
-        label.setTranslateX(LABEL_X);
-        label.setTranslateY(LABEL_Y);
-        Platform.runLater(() -> main.root.getChildren().add(label));
+        setposnsizelabel(label);
+        Platform.runLater(() -> view.root.getChildren().add(label));
         animateLabel(label);
     }
 
@@ -46,7 +46,7 @@ public class Score {
             double scale = 1 + 0.5 * fraction;
             double opacity = 1 - fraction;
 
-            KeyFrame keyFrame = new KeyFrame(Duration.millis(i * (totalAnimationDuration / animationSteps)), e -> {
+            KeyFrame keyFrame = new KeyFrame(Duration.millis(i * ((double) totalAnimationDuration / animationSteps)), e -> {
                 label.setScaleX(scale);
                 label.setScaleY(scale);
                 label.setOpacity(opacity);
@@ -58,33 +58,46 @@ public class Score {
         timeline.play();
     }
 
-    public void showGameOver(final Main main) {
+    public void showGameOver(final View view) {
         Platform.runLater(() -> {
             Label label = createLabel("Game Over :(");
-            Button restart = createButton(event -> main.restartGame());
-            main.root.getChildren().addAll(label, restart);
+            setposnsizelabel(label);
+            Button restart = createButton(event -> view.getController().restartGame());
+            view.root.getChildren().addAll(label, restart);
         });
     }
 
-    public void showWin(final Main main) {
+    public void showWin(final View view) {
         Platform.runLater(() -> {
             Label label = createLabel("You Win :)");
-            main.root.getChildren().add(label);
+            setposnsizelabel(label);
+            Button restart = createButton(event -> view.getController().restartGame());
+            view.root.getChildren().addAll(label, restart);
+        });
+    }
+
+    public void showGamePaused(final View view) {
+        Platform.runLater(() -> {
+            Label label = createLabel("Game Paused");
+            setposnsizelabel(label);
+            view.root.getChildren().add(label);
+        });
+    }
+
+    public void removeGamePaused(final View view) {
+        Platform.runLater(() -> {
+            ObservableList<Node> children = view.root.getChildren();
+            children.removeIf(node -> node instanceof Label && ((Label) node).getText().equals("Game Paused"));
         });
     }
 
     private Label createLabel(String text) {
-        Label label = new Label(text);
-        label.setTranslateX(GAME_OVER_LABEL_X);
-        label.setTranslateY(GAME_OVER_LABEL_Y);
-        label.setScaleX(SCALE_FACTOR);
-        label.setScaleY(SCALE_FACTOR);
-        return label;
+        return new Label(text);
     }
 
     private Button createButton(EventHandler<ActionEvent> handler) {
         Button button = new Button("Restart");
-        button.setTranslateX(LABEL_X);
+        button.setTranslateX(220);
         button.setTranslateY(370);
         button.setOnAction(handler);
         return button;

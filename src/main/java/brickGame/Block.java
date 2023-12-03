@@ -7,18 +7,18 @@ import javafx.scene.shape.Rectangle;
 import java.io.Serializable;
 
 public class Block implements Serializable {
-    private static Block block = new Block(-1, -1, Color.TRANSPARENT, 99);
+    private static final Block block = new Block(-1, -1, Color.TRANSPARENT, 99);
     public int row;
     public int column;
     public boolean isDestroyed = false;
-    private Color color;
+    private final Color color;
     public int type;
     public double x;
     public double y;
-    private double width = 100;
-    private double height = 30;
-    private double paddingTop = height * 2;
-    private double paddingH = 50;
+    private final double width = 100;
+    private final double height = 30;
+    private final double paddingTop = height * 2;
+    private final double paddingH = 50;
     public Rectangle rect;
     public static double NO_HIT = -1;
     public static double HIT_RIGHT = 0;
@@ -41,37 +41,43 @@ public class Block implements Serializable {
     }
 
     private void draw() {
-        x = (column * width) + paddingH;
-        y = (row * height) + paddingTop;
+        x = column * width + paddingH;
+        y = row * height + paddingTop;
 
-        rect = new Rectangle();
-        rect.setWidth(width);
-        rect.setHeight(height);
-        rect.setX(x);
-        rect.setY(y);
+        rect = new Rectangle(x, y, width, height);
         rect.setStroke(Color.BLACK);
         rect.setStrokeWidth(2);
 
-        if (type == BLOCK_CHOCO) {
-            Image image = new Image("choco2.png");
-            ImagePattern pattern = new ImagePattern(image);
-            rect.setFill(pattern);
-        } else if (type == BLOCK_HEART) {
-            Image image = new Image("heart3.png");
-            ImagePattern pattern = new ImagePattern(image);
-            rect.setFill(pattern);
-        } else if (type == BLOCK_STAR) {
-            Image image = new Image("star3.png");
-            ImagePattern pattern = new ImagePattern(image);
-            rect.setFill(pattern);
-        } else if (type == BLOCK_BOMB) {
-            Image image = new Image("bomb3.png");
-            ImagePattern pattern = new ImagePattern(image);
-            rect.setFill(pattern);
+        setBlockFill();
+
+    }
+
+    private void setBlockFill() {
+        if (type == BLOCK_CHOCO || type == BLOCK_HEART || type == BLOCK_STAR || type == BLOCK_BOMB) {
+            setFillPattern(type);
         } else {
             rect.setFill(color);
         }
+    }
 
+    private void setFillPattern(int blockType) {
+        String imageName;
+
+        if (blockType == BLOCK_CHOCO) {
+            imageName = "choco2.png";
+        } else if (blockType == BLOCK_HEART) {
+            imageName = "heart3.png";
+        } else if (blockType == BLOCK_STAR) {
+            imageName = "star3.png";
+        } else if (blockType == BLOCK_BOMB) {
+            imageName = "bomb3.png";
+        } else {
+            throw new IllegalArgumentException("Invalid block type: " + blockType);
+        }
+
+        Image image = new Image(imageName);
+        ImagePattern pattern = new ImagePattern(image);
+        rect.setFill(pattern);
     }
 
     public double checkHitToBlock(double xBall, double yBall, double ballRadius) {

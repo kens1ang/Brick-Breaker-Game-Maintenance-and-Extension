@@ -17,16 +17,15 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class View {
-    private Controller controller;
+    private final Controller controller;
     private Circle ball;
     private Rectangle rect;
     public Pane root;
     private Label scoreLabel;
     private Label heartLabel;
     private Label levelLabel;
-    private int ballRadius = 10;
-    private int sceneWidth = 500;
-    private int sceneHeigt = 700;
+    private final int sceneWidth = 500;
+    private final int sceneHeigt = 700;
     Button load    = null;
     Button newGame = null;
 
@@ -36,7 +35,7 @@ public class View {
 
     public void initBallView() {
         ball = new Circle();
-        ball.setRadius(ballRadius);
+        ball.setRadius(controller.getModel().getBallob().getBallRadius());
         ball.setFill(new ImagePattern(new Image("volleyball.png")));
         ball.setCenterX(controller.getModel().getBallob().getxBall());
         ball.setCenterY(controller.getModel().getBallob().getyBall());
@@ -44,7 +43,7 @@ public class View {
         ball.setStrokeWidth(2);
     }
 
-    public void initBreakView() {
+    public void initBreak() {
         rect = new Rectangle();
         rect.setWidth(controller.getModel().getPaddle().getBreakWidth());
         rect.setHeight(controller.getModel().getPaddle().getBreakHeight());
@@ -76,45 +75,13 @@ public class View {
         primaryStage.show();
     }
 
-    public void hideelements() {
-        for (Block block : controller.getModel().getBlocks()) {
-            block.getRect().setOpacity(0);
-        }
-        rect.setOpacity(0);
-        ball.setOpacity(0);
-        scoreLabel.setOpacity(0);
-        heartLabel.setOpacity(0);
-        levelLabel.setOpacity(0);
-    }
-
-    public void showelements() {
-        for (Block block : controller.getModel().getBlocks()) {
-            block.getRect().setOpacity(1);
-        }
-        rect.setOpacity(1);
-        ball.setOpacity(1);
-        scoreLabel.setOpacity(1);
-        heartLabel.setOpacity(1);
-        levelLabel.setOpacity(1);
-    }
-
     public void initstartmenubutton() {
         load = new Button("Load Game");
         newGame = new Button("Start Game");
         load.setTranslateX(220);
         load.setTranslateY(370);
         newGame.setTranslateX(220);
-        newGame.setTranslateY(270);
-        load.setOpacity(0);
-        newGame.setOpacity(0);
-    }
-
-    public void initstartpage() {
-        root.getStyleClass().add("startRoot");
-    }
-
-    public void removestartpage() {
-        root.getStyleClass().remove("startRoot");
+        newGame.setTranslateY(330);
     }
 
     public void initfinallevel() {
@@ -131,7 +98,7 @@ public class View {
     }
 
     public void handlefloorcolideView() {
-        new Score().show(sceneWidth / 2, sceneHeigt / 2, -1, this);
+        new Score().show((double) sceneWidth / 2, (double) sceneHeigt / 2, -1, this);
     }
 
     public void notnormalblockView(Block block) {
@@ -142,12 +109,9 @@ public class View {
     public void handlehitbonusblockView(Block block) {
         final Bonus choco = new Bonus(block.getRow(), block.getColumn());
         choco.setTimeCreated(controller.getModel().getTime());
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                root.getChildren().add(choco.getChoco());
-                System.out.println("BONUS!");
-            }
+        Platform.runLater(() -> {
+            root.getChildren().add(choco.getChoco());
+            System.out.println("BONUS!");
         });
         controller.getModel().getChocos().add(choco);
     }
@@ -161,12 +125,9 @@ public class View {
 
     public void handlehitbombblockView(Block block){
         final Bomb bomb = new Bomb(block.getRow(), block.getColumn());
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                root.getChildren().add(bomb.getBomb());
-                System.out.println("BOMB!");
-            }
+        Platform.runLater(() -> {
+            root.getChildren().add(bomb.getBomb());
+            System.out.println("BOMB!");
         });
         controller.getModel().getBombs().add(bomb);
     }
@@ -222,20 +183,17 @@ public class View {
         new Score().showWin(this);
     }
     public void showMessage(String message) {new Score().showMessage(message, this);}
-
     public Button getLoad() {
         return load;
     }
     public Button getNewGame() {
         return newGame;
     }
-    public View setLoadvisible(Boolean tf) {
+    public void setLoadvisible(Boolean tf) {
         this.load.setVisible(tf);
-        return this;
     }
-    public View setNewGamevisible(Boolean tf) {
+    public void setNewGamevisible(Boolean tf) {
         this.newGame.setVisible(tf);
-        return this;
     }
     public Controller getController() {
         return controller;

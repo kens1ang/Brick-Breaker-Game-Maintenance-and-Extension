@@ -1,12 +1,10 @@
 package brickGame;
 
 public class Paddle {
-    private double xBreak = (500 - 130) / 2.0;
     private double centerBreakX;
+    private double xBreak = (500 - 130) / 2.0;
     private double yBreak = 640.0f;
-    private int breakWidth     = 130;
-    private int breakHeight    = 30;
-    private int halfBreakWidth = breakWidth / 2;
+    private final int breakWidth = 130;
 
     public double getCenterBreakX() {
         return centerBreakX;
@@ -17,16 +15,20 @@ public class Paddle {
     public double getxBreak() {
         return xBreak;
     }
-    public double addxBreak() {return xBreak++; }
-    public double minusxBreak() {return xBreak--; }
+    public void addxBreak() {
+        xBreak++;
+    }
+    public void minusxBreak() {
+        xBreak--;
+    }
     public int getHalfBreakWidth() {
-        return halfBreakWidth;
+        return breakWidth / 2;
     }
     public int getBreakWidth() {
         return breakWidth;
     }
     public int getBreakHeight() {
-        return breakHeight;
+        return 30;
     }
     public void setxBreak(double xBreak) {
         this.xBreak = xBreak;

@@ -3,7 +3,6 @@ package brickGame;
 public class Ball {
     private double xBall;
     private double yBall;
-    private int ballRadius = 10;
     private boolean goDownBall = true;
     private boolean goRightBall = true;
 
@@ -36,6 +35,6 @@ public class Ball {
         return goDownBall;
     }
     public int getBallRadius() {
-        return ballRadius;
+        return 10;
     }
 }
