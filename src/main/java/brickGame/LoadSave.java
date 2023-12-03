@@ -1,10 +1,9 @@
 package brickGame;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class LoadSave {
     public boolean          isExistHeartBlock;
@@ -31,12 +30,13 @@ public class LoadSave {
     public long             time;
     public long             goldTime;
     public double           vX;
-    public ArrayList<BlockSerializable> blocks = new ArrayList<BlockSerializable>();
+    public ArrayList<BlockSerializable> blocks = new ArrayList<>();
+    private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
 
     public void read() {
 
         try {
-            ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(new File(Main.savePath)));
+            ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(Controller.savePath));
 
             level = inputStream.readInt();
             score = inputStream.readInt();
@@ -66,11 +66,11 @@ public class LoadSave {
             try {
                 blocks = (ArrayList<BlockSerializable>) inputStream.readObject();
             } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+                LOGGER.log(Level.SEVERE, "IOException occurred in ArrayList<BlockSerializable>)", e);
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "IOException occurred in read", e);
         }
     }
 }
