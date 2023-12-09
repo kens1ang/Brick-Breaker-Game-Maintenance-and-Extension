@@ -1,5 +1,8 @@
 package brickGame;
 
+import Controller.GameController;
+import GameElements.BlockSerializable;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -36,7 +39,7 @@ public class LoadSave {
     public void read() {
 
         try {
-            ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(Controller.savePath));
+            ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(GameController.savePath));
 
             level = inputStream.readInt();
             score = inputStream.readInt();

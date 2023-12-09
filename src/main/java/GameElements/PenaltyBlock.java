@@ -1,4 +1,4 @@
-package brickGame;
+package GameElements;
 
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
@@ -6,16 +6,16 @@ import javafx.scene.shape.Rectangle;
 
 import java.io.Serializable;
 
-public class Bomb implements Serializable{
+public class PenaltyBlock implements Serializable{
 
     public Rectangle bomb;
     public double x;
     public double y;
     public boolean taken = false;
 
-    public Bomb(int row, int column) {
-        x = (column * (Block.getWidth())) + Block.getPaddingH() + (Block.getWidth() / 2) - 15;
-        y = (row * (Block.getHeight())) + Block.getPaddingTop() + (Block.getHeight() / 2) - 15;
+    public PenaltyBlock(int row, int column) {
+        x = (column * (GameBlock.getWidth())) + GameBlock.getPaddingH() + (GameBlock.getWidth() / 2) - 15;
+        y = (row * (GameBlock.getHeight())) + GameBlock.getPaddingTop() + (GameBlock.getHeight() / 2) - 15;
 
         draw();
     }

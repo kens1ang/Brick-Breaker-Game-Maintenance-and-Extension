@@ -1,4 +1,4 @@
-package brickGame;
+package View;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -11,7 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.util.Duration;
 
-public class Score {
+public class GameScore {
 
     private void setposnsizelabel(Label label) {
         label.setTranslateY(320);
@@ -20,7 +20,7 @@ public class Score {
         label.setScaleY(1);
     }
 
-    public void show(final double x, final double y, int score, final View view) {
+    public void show(final double x, final double y, int score, final GameView view) {
         String sign = score >= 0 ? "+" : "";
         final Label label = new Label(sign + score);
         label.setTranslateX(x);
@@ -29,7 +29,7 @@ public class Score {
         animateLabel(label);
     }
 
-    public void showMessage(String message, final View view) {
+    public void showMessage(String message, final GameView view) {
         final Label label = new Label(message);
         setposnsizelabel(label);
         Platform.runLater(() -> view.root.getChildren().add(label));
@@ -58,7 +58,7 @@ public class Score {
         timeline.play();
     }
 
-    public void showGameOver(final View view) {
+    public void showGameOver(final GameView view) {
         Platform.runLater(() -> {
             Label label = createLabel("Game Over :(");
             setposnsizelabel(label);
@@ -67,7 +67,7 @@ public class Score {
         });
     }
 
-    public void showWin(final View view) {
+    public void showWin(final GameView view) {
         Platform.runLater(() -> {
             Label label = createLabel("You Win :)");
             setposnsizelabel(label);
@@ -76,7 +76,7 @@ public class Score {
         });
     }
 
-    public void showGamePaused(final View view) {
+    public void showGamePaused(final GameView view) {
         Platform.runLater(() -> {
             Label label = createLabel("Game Paused");
             setposnsizelabel(label);
@@ -84,7 +84,7 @@ public class Score {
         });
     }
 
-    public void removeGamePaused(final View view) {
+    public void removeGamePaused(final GameView view) {
         Platform.runLater(() -> {
             ObservableList<Node> children = view.root.getChildren();
             children.removeIf(node -> node instanceof Label && ((Label) node).getText().equals("Game Paused"));

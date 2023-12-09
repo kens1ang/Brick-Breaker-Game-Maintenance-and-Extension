@@ -1,5 +1,12 @@
-package brickGame;
+package Controller;
 
+import GameElements.GameBlock;
+import GameElements.BlockSerializable;
+import GameElements.BonusBlock;
+import GameElements.PenaltyBlock;
+import Model.GameModel;
+import View.GameView;
+import brickGame.*;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyEvent;
@@ -15,12 +22,12 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Controller implements EventHandler<KeyEvent>, GameEngine.OnAction {
+public class GameController implements EventHandler<KeyEvent>, GameEngine.OnAction {
     private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
     public static String savePath    = "C:/save/save.mdds";
     public static String savePathDir = "C:/save/";
-    private final Model model;
-    private final View view;
+    private final GameModel model;
+    private final GameView view;
     private GameEngine engine;
     Stage primaryStage;
     private boolean loadFromSave = false;
@@ -28,9 +35,9 @@ public class Controller implements EventHandler<KeyEvent>, GameEngine.OnAction {
     private final int sceneHeigt = 700;
     private int destroyedBlockCount = 0;
 
-    public Controller() {
-        this.model = new Model();
-        this.view = new View(this);
+    public GameController() {
+        this.model = new GameModel();
+        this.view = new GameView(this);
         this.engine = new GameEngine();
     }
 
@@ -75,7 +82,7 @@ public class Controller implements EventHandler<KeyEvent>, GameEngine.OnAction {
             }
             leveldone = false;
         } catch (Exception e){
-            LOGGER.log(Level.SEVERE, "Exception occurred in Controller.start", e);
+            LOGGER.log(Level.SEVERE, "Exception occurred in GameController.start", e);
         }
     }
 
@@ -108,10 +115,10 @@ public class Controller implements EventHandler<KeyEvent>, GameEngine.OnAction {
     public void handle(KeyEvent event) {
         switch (event.getCode()) {
             case LEFT:
-                model.move(Model.getLEFT());
+                model.move(GameModel.getLEFT());
                 break;
             case RIGHT:
-                model.move(Model.getRIGHT());
+                model.move(GameModel.getRIGHT());
                 break;
             case S:
                 saveGame();
@@ -211,7 +218,7 @@ public class Controller implements EventHandler<KeyEvent>, GameEngine.OnAction {
                 outputStream.writeBoolean(model.isColideToTopBlock());
 
                 ArrayList<BlockSerializable> blockSerializables = new ArrayList<>();
-                for (Block block : model.getBlocks()) {
+                for (GameBlock block : model.getBlocks()) {
                     if (block.isDestroyed) {
                         continue;
                     }
@@ -263,7 +270,7 @@ public class Controller implements EventHandler<KeyEvent>, GameEngine.OnAction {
 
         for (BlockSerializable ser : loadSave.blocks) {
             int r = new Random().nextInt(200);
-            model.getBlocks().add(new Block(ser.row, ser.j, model.getColors()[r % model.getColors().length], ser.type));
+            model.getBlocks().add(new GameBlock(ser.row, ser.j, model.getColors()[r % model.getColors().length], ser.type));
         }
 
         try {
@@ -334,10 +341,10 @@ public class Controller implements EventHandler<KeyEvent>, GameEngine.OnAction {
     }
 
     private void handlenotnormalblock() {
-        if (model.getBallob().getyBall() >= Block.getPaddingTop() && model.getBallob().getyBall() <= (Block.getHeight() * (model.getLevel() + 1)) + Block.getPaddingTop()) {
-            for (final Block block : model.getBlocks()) {
+        if (model.getBallob().getyBall() >= GameBlock.getPaddingTop() && model.getBallob().getyBall() <= (GameBlock.getHeight() * (model.getLevel() + 1)) + GameBlock.getPaddingTop()) {
+            for (final GameBlock block : model.getBlocks()) {
                 double hitCode = block.checkHitToBlock(model.getBallob().getxBall(), model.getBallob().getyBall(), model.getBallob().getBallRadius());
-                if (hitCode != Block.NO_HIT) {
+                if (hitCode != GameBlock.NO_HIT) {
                     view.notnormalblockView(block);
                     model.incScore(1);
                     block.isDestroyed = true;
@@ -350,18 +357,18 @@ public class Controller implements EventHandler<KeyEvent>, GameEngine.OnAction {
         }
     }
 
-    private void checkhitnotnormalblock(Block block) {
-        if (block.type == Block.BLOCK_CHOCO) {
+    private void checkhitnotnormalblock(GameBlock block) {
+        if (block.type == GameBlock.BLOCK_CHOCO) {
             view.handlehitbonusblockView(block);
         }
-        if (block.type == Block.BLOCK_STAR) {
+        if (block.type == GameBlock.BLOCK_STAR) {
             model.handlehitgoldblockModel();
             view.handlehitgoldblockView();
         }
-        if (block.type == Block.BLOCK_HEART) {
+        if (block.type == GameBlock.BLOCK_HEART) {
             model.handlehitheartblockModel();
         }
-        if (block.type == Block.BLOCK_BOMB) {
+        if (block.type == GameBlock.BLOCK_BOMB) {
             view.handlehitbombblockView(block);
         }
     }
@@ -382,8 +389,8 @@ public class Controller implements EventHandler<KeyEvent>, GameEngine.OnAction {
     }
 
     private void handlebombobject() {
-        List<Bomb> bombsToRemove = new ArrayList<>();
-        for (Bomb bomb : model.getBombs()) {
+        List<PenaltyBlock> bombsToRemove = new ArrayList<>();
+        for (PenaltyBlock bomb : model.getBombs()) {
             bomb.updatePosition();
             if (model.bombHitsPaddle(bomb)) {
                 model.handleBombPaddleCollisionModel(bomb);
@@ -404,8 +411,8 @@ public class Controller implements EventHandler<KeyEvent>, GameEngine.OnAction {
     }
 
     private void handlebonusobject() {
-        List<Bonus> chocosToRemove = new ArrayList<>();
-        for (Bonus choco : model.getChocos()) {
+        List<BonusBlock> chocosToRemove = new ArrayList<>();
+        for (BonusBlock choco : model.getChocos()) {
             if (choco.getY() > sceneHeigt || choco.isTaken()) {
                 continue;
             }
@@ -414,7 +421,7 @@ public class Controller implements EventHandler<KeyEvent>, GameEngine.OnAction {
                 view.handleChocoHitView(choco);
                 chocosToRemove.add(choco);
             }
-            model.updateChocoPosition(choco);
+            choco.updateChocoPosition(choco, model);
         }
         model.getChocos().removeAll(chocosToRemove);
     }
@@ -427,7 +434,7 @@ public class Controller implements EventHandler<KeyEvent>, GameEngine.OnAction {
     public boolean isLoadFromSave() {
         return loadFromSave;
     }
-    public Model getModel() {
+    public GameModel getModel() {
         return model;
     }
 }

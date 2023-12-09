@@ -77,6 +77,7 @@ public class SoundManager {
     public void playPauseSound(){playSound(pause);}
     public void playBackgroundMusic() {
         if (backgroundMusic != null) {
+            backgroundMusic.setCycleCount(MediaPlayer.INDEFINITE);
             backgroundMusic.play();
             isBackgroundMusicPlaying = true;
         }
