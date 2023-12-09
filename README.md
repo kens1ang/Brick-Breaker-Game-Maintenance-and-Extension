@@ -17,6 +17,7 @@ This project is developed using Intellij IDEA Community Edition and utilized Jav
 7. Navigate to the location on your computer where JavaFX SDK 21.0.1 is installed.
 8. Inside the SDK folder, select the "lib" folder.
 9. Apple the changes.
+    
 NOTES:
 - There should be no JavaFX errors and the program should be able to run.
 - If the erros still exist remove the library and add again by following the steps above.
