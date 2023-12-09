@@ -1,21 +1,22 @@
-package brickGame;
+package GameElements;
 
+import Model.GameModel;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import java.io.Serializable;
 import java.util.Random;
 
-public class Bonus implements Serializable {
+public class BonusBlock implements Serializable {
     public Rectangle choco;
     public double x;
     public double y;
     public long timeCreated;
     public boolean taken = false;
 
-    public Bonus(int row, int column) {
-        x = (column * (Block.getWidth())) + Block.getPaddingH() + (Block.getWidth() / 2) - 15;
-        y = (row * (Block.getHeight())) + Block.getPaddingTop() + (Block.getHeight() / 2) - 15;
+    public BonusBlock(int row, int column) {
+        x = (column * (GameBlock.getWidth())) + GameBlock.getPaddingH() + (GameBlock.getWidth() / 2) - 15;
+        y = (row * (GameBlock.getHeight())) + GameBlock.getPaddingTop() + (GameBlock.getHeight() / 2) - 15;
         draw();
     }
 
@@ -34,6 +35,10 @@ public class Bonus implements Serializable {
         }
 
         choco.setFill(new ImagePattern(new Image(url)));
+    }
+
+    public void updateChocoPosition(BonusBlock choco, GameModel model) {
+        choco.addtoY(((model.getTime() - choco.getTimeCreated()) / 1000.000) + 1.000);
     }
 
     public double getX() {

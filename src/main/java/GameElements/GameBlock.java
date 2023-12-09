@@ -1,4 +1,4 @@
-package brickGame;
+package GameElements;
 
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -6,8 +6,8 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import java.io.Serializable;
 
-public class Block implements Serializable {
-    private static final Block block = new Block(-1, -1, Color.TRANSPARENT, 99);
+public class GameBlock implements Serializable {
+    private static final GameBlock block = new GameBlock(-1, -1, Color.TRANSPARENT, 99);
     public int row;
     public int column;
     public boolean isDestroyed = false;
@@ -31,7 +31,7 @@ public class Block implements Serializable {
     public static int BLOCK_HEART = 102;
     public static int BLOCK_BOMB = 103;
 
-    public Block(int row, int column, Color color, int type) {
+    public GameBlock(int row, int column, Color color, int type) {
         this.row = row;
         this.column = column;
         this.color = color;

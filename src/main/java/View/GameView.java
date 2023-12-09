@@ -1,5 +1,9 @@
-package brickGame;
+package View;
 
+import Controller.GameController;
+import GameElements.GameBlock;
+import GameElements.BonusBlock;
+import GameElements.PenaltyBlock;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
@@ -16,8 +20,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-public class View {
-    private final Controller controller;
+public class GameView {
+    private final GameController controller;
     private Circle ball;
     private Rectangle rect;
     public Pane root;
@@ -29,7 +33,7 @@ public class View {
     Button load    = null;
     Button newGame = null;
 
-    public View(Controller controller) {
+    public GameView(GameController controller) {
         this.controller = controller;
     }
 
@@ -64,7 +68,7 @@ public class View {
         } else {
             root.getChildren().addAll(rect, ball, scoreLabel, heartLabel, levelLabel);
         }
-        for (Block block :  controller.getModel().getBlocks()) {
+        for (GameBlock block :  controller.getModel().getBlocks()) {
             root.getChildren().add(block.getRect());
         }
         Scene scene = new Scene(root, sceneWidth, sceneHeigt);
@@ -98,16 +102,16 @@ public class View {
     }
 
     public void handlefloorcolideView() {
-        new Score().show((double) sceneWidth / 2, (double) sceneHeigt / 2, -1, this);
+        new GameScore().show((double) sceneWidth / 2, (double) sceneHeigt / 2, -1, this);
     }
 
-    public void notnormalblockView(Block block) {
-        new Score().show(block.getX(), block.getY(), 1, this);
+    public void notnormalblockView(GameBlock block) {
+        new GameScore().show(block.getX(), block.getY(), 1, this);
         block.getRect().setVisible(false);
     }
 
-    public void handlehitbonusblockView(Block block) {
-        final Bonus choco = new Bonus(block.getRow(), block.getColumn());
+    public void handlehitbonusblockView(GameBlock block) {
+        final BonusBlock choco = new BonusBlock(block.getRow(), block.getColumn());
         choco.setTimeCreated(controller.getModel().getTime());
         Platform.runLater(() -> {
             root.getChildren().add(choco.getChoco());
@@ -123,8 +127,8 @@ public class View {
         root.getStyleClass().add("goldRoot");
     }
 
-    public void handlehitbombblockView(Block block){
-        final Bomb bomb = new Bomb(block.getRow(), block.getColumn());
+    public void handlehitbombblockView(GameBlock block){
+        final PenaltyBlock bomb = new PenaltyBlock(block.getRow(), block.getColumn());
         Platform.runLater(() -> {
             root.getChildren().add(bomb.getBomb());
             System.out.println("BOMB!");
@@ -137,12 +141,12 @@ public class View {
         root.getStyleClass().remove("goldRoot");
     }
 
-    public void handleChocoHitView(Bonus choco) {
+    public void handleChocoHitView(BonusBlock choco) {
         Platform.runLater(() -> choco.getChoco().setVisible(false));
-        new Score().show(choco.getX(), choco.getY(), 3, this);
+        new GameScore().show(choco.getX(), choco.getY(), 3, this);
     }
 
-    public void handleBombPaddleCollisionView(Bomb bomb) {
+    public void handleBombPaddleCollisionView(PenaltyBlock bomb) {
         shakeScreen();
         rect.setVisible(false);
         Platform.runLater(() -> root.getChildren().remove(bomb.getBomb()));
@@ -171,18 +175,18 @@ public class View {
     }
 
     public void showGamePaused() {
-        new Score().showGamePaused(this);
+        new GameScore().showGamePaused(this);
     }
     public void removeGamePaused() {
-        new Score().removeGamePaused(this);
+        new GameScore().removeGamePaused(this);
     }
     public void showGameOver() {
-        new Score().showGameOver(this);
+        new GameScore().showGameOver(this);
     }
     public void showWin() {
-        new Score().showWin(this);
+        new GameScore().showWin(this);
     }
-    public void showMessage(String message) {new Score().showMessage(message, this);}
+    public void showMessage(String message) {new GameScore().showMessage(message, this);}
     public Button getLoad() {
         return load;
     }
@@ -195,7 +199,7 @@ public class View {
     public void setNewGamevisible(Boolean tf) {
         this.newGame.setVisible(tf);
     }
-    public Controller getController() {
+    public GameController getController() {
         return controller;
     }
 }

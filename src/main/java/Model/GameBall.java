@@ -1,6 +1,6 @@
-package brickGame;
+package Model;
 
-public class Ball {
+public class GameBall {
     private double xBall;
     private double yBall;
     private boolean goDownBall = true;

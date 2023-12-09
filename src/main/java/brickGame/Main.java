@@ -1,5 +1,6 @@
 package brickGame;
 
+import Controller.GameController;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -10,6 +11,6 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        new Controller().start(primaryStage);
+        new GameController().start(primaryStage);
     }
 }

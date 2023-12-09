@@ -1,6 +1,6 @@
-package brickGame;
+package Model;
 
-public class Paddle {
+public class GamePaddle {
     private double centerBreakX;
     private double xBreak = (500 - 130) / 2.0;
     private double yBreak = 640.0f;
