@@ -37,8 +37,13 @@ This project is developed using Intellij IDEA Community Edition and utilized Jav
 
 
 ## Implemented and Working Properly:
+
 #Game Ball
+
 **Initialization**
+
 The ball is initialized at a fixed position at the start of each level, strategically placed between the lowest block and the paddle
+
 **Randomized Movement**
+
 The ball's movement direction is randomized at the beginning of each level, with both horizontal and vertical directions being set randomly. 
