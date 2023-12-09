@@ -1,4 +1,3 @@
-# COMP2042_CW_hfykl13
 # Brick Breaker Game
 ## Compilation Instructions:
 
