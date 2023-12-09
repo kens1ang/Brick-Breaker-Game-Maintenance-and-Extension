@@ -31,6 +31,14 @@ This project is developed using Intellij IDEA Community Edition and utilized Jav
 - Press space bar to pause or resume the game.
 - Press s to save game. 
     
-NOTES:
+**NOTES:**
 - There should be no JavaFX errors and the game should be able to run.
 - If the erros still exist, kindly remove and add the library again by following the steps above.
+
+
+## Implemented and Working Properly:
+#Game Ball
+**Initialization**
+The ball is initialized at a fixed position at the start of each level, strategically placed between the lowest block and the paddle
+**Randomized Movement**
+The ball's movement direction is randomized at the beginning of each level, with both horizontal and vertical directions being set randomly. 
