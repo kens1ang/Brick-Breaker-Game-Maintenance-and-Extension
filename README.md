@@ -166,7 +166,7 @@ This Java project is developed using Intellij IDEA Community Edition and utilize
 - `playSound`: General method to play a sound, stopping it if it's already playing.
 
 ### GameController
-- The `GameController` class in the Controller package
+- The `GameController` class in the `Controller` package
 - It handles user input, manages the game state, and interacts with both the model (`GameModel`) and the view (`GameView`).
 - model: An instance of the `GameModel` class, representing the game's underlying data and logic.
 - view: An instance of the `GameView` class, representing the visual aspects of the game.
@@ -178,15 +178,100 @@ This Java project is developed using Intellij IDEA Community Edition and utilize
 - `onUpdate`, `onPhysicsUpdate`, `onInit`, `onTime`: Methods implementing the `OnAction` interface for game engine callbacks.
 
 ### GameView
+- The `GameView` class is in the `View` package
+- The class interacts with the `GameController` to update the view based on the state of the game model.
+- It also handles user interface events, such as button clicks.
+- The class uses CSS styling to modify the appearance of specific elements, such as the root during the final level or when a gold block is hit.
+- The class uses JavaFX animations, such as screen shaking and transitions, to enhance the user experience.
+
 ### PenaltyBlock
+- The `PenaltyBlock` class in the `GameElements` package
+- The `PenaltyBlock` class is responsible for creating and managing penalty blocks that fall down the game screen. When the ball collides with a paddle, these blocks trigger a penalty event.
+- `bomb`: A Rectangle representing the penalty block.
+- `x`, `y`: The coordinates of the penalty block.
+- `taken`: A boolean indicating whether the penalty block has been taken by the player.
+- The constructor takes the row and column parameters to calculate the initial position of the penalty block based on the dimensions of the `GameBlock`. It then calls the draw method to create the Rectangle and set its visual properties.
+- `draw`: Initializes the Rectangle (bomb) by setting its width, height, position, and fill (using an image pattern).
+- `updatePosition`: Updates the position of the penalty block to simulate its downward movement. This method is typically called in a game loop or during game updates.
+- `getBomb`: Getter method for the Rectangle representing the penalty block.
+- `getY`, `getX`: Getter methods for the y and x coordinates of the penalty block.
+- `setTaken`: Setter method to indicate whether the penalty block has been taken.
 
 ## Modified Java Classes:
 
 ### Main
+- The `Main` class is in `brickGame` package
+- The initial setup where the `Main` class contains all the logic for the game (including `GameModel`, `GameView`, `GameController`, `GameBall`, and `GamePaddle`) suggests a lack of separation of concerns
+- After refactoring based on MVC pattern, each component (`GameModel`, `GameView`, and `GameController`) is responsible for its specific role in the application, adhering to the MVC pattern.
+- This separation improves code organization, maintainability, and makes it easier to understand and extend the codebase.
+- Now `Main` class serves as the entry point for the JavaFX application and initializes the game by creating an instance of the GameController class.
+
 ### GameScore
+- `Score` class has been transformed into the `GameScore` class within the `View` package.
+- This class is responsible for displaying various messages and handling their animations in the game.
+- Method Extraction: Extracted the common logic for setting the position and size of labels into the private method `setposnsizelabel`.
+- Code Simplification: Simplified the conditional expression in the show method to determine the sign of the score. Utilized `lambda` expressions to simplify code blocks with a single method call.
+- Animation Refactoring: Refactored the animation logic into a separate private method `animateLabel` for better readability. Used a `Timeline` to manage the animation frames, making the code more structured.
+- Label and Button Creation: Created private methods `createLabel` and `createButton` to abstract the creation of Label and Button instances with common properties.
+- Reuse of Logic: Reused the common logic for creating labels and buttons in the `showGameOver`, `showWin`, `showGamePaused`, and `removeGamePaused` methods.
+- EventHandler Simplification: Used `lambda` expressions to simplify the creation of `EventHandler` instances, making the code more concise.
+
 ### GameEngine
+This class is located in `Controller` class act as one of the component of controller
+
+**1. Thread Replacement with JavaFX AnimationTimer and Timeline:**
+- Replaced the usage of traditional threads with JavaFX's AnimationTimer and Timeline for better integration with JavaFX applications.
+- Introduced Timeline for the update loop and physics loop to handle periodic actions.
+
+**2. FPS Calculation:**
+- Instead of calculating the sleep time based on FPS, used AnimationTimer and Timeline which inherently operate with a frame rate.
+
+**3. Pause and Resume Functionality:**
+- Added methods for pausing and resuming the game. This was not present in the original code.
+
+**4. Initialization Logic:**
+- Kept the initialization logic (onAction.onInit()) in a separate method for clarity.
+
+**5. Time Tracking:**
+- Replaced the custom time tracking logic with the use of System.currentTimeMillis().
+
+**6. Code Cleanup:**
+- Removed unnecessary code, such as the isStopped flag and the explicit stopping of threads using stop(). JavaFX handles the lifecycle of Timeline and AnimationTimer.
+
+**7. Public Interface:**
+- Maintained the same public interface through the OnAction interface, ensuring compatibility with the existing implementations.
+
+**8. Default FPS Value:**
+- Set a default value of 60 FPS for smoother animations. This can be modified using the setFps method.
+
+**9. Check for Running State:**
+- Added a method isRunning() to check whether the game engine is currently running.
+
 ### LoadSave
+**1. Exception Handling Improvement:**
+- Improved exception handling by using a `logger` to log specific information about the exceptions that may occur during file reading.
+  
+**2. Dynamic Save Path:**
+- In the original code, the save path was hardcoded to Main.savePath. In the refactored code, the path is obtained from `GameController.savePath`.
+- This allows for more flexibility, especially when the save path is changed or defined dynamically.
+
+**3. File Existence Check:**
+- Removed the unnecessary check for file existence `(new File(Main.savePath))` when creating the `ObjectInputStream`.
+- It's not required because an `ObjectInputStream` can handle the absence of a file by throwing an `EOFException`.
+
+### GameBlock
+- The class name has been changed from `Block` to `GameBlock` and moved to `GameElements` package
+**1. Refactor collision detection logic `checkhittoblock` method**
+- The method now accepts an additional parameter `ballRadius` to improve collision detection accuracy, considering the size of the ball.
+- The new version uses boolean checks to determine whether the ball collides with the top, bottom, left, or right edges of the block.
+- The collision detection conditions are more explicitly stated, making it clear under which circumstances the ball hits the top, bottom, left, or right of the block.
+**2. Additional Block Types**
+- An extra block type (`BLOCK_BOMB`) has been introduced, expanding the variety of blocks in the game.
+
 ### BonusBlock
+- In the refactored code, the `Bonus` class has been renamed to `BonusBlock` to follow a more consistent naming convention with other classes in the project. 
+- Additionally, the class has been moved to the `GameElements` package to organize related game elements. 
+- The structure of the code remains similar to the original, with minor improvements for better readability and maintainability.
 
 ## Unexpected Problems:
   
@@ -214,7 +299,7 @@ This Java project is developed using Intellij IDEA Community Edition and utilize
 - When multiple threads are involved, it's crucial to synchronize access to shared resources. There are bugs and erros such as label `+1` still displaying after block is destroyed, ball penetrating through blocks frequently, concurrent errors etc
 - The issues occur due to lack of synchronization in the code, multiple threads access shared data wihtout proper synchronization
 2. **Timeline Integration in `GameEngine` class**:
-- JavaFX Timeline is designed to work well with the UI thread ensures that the animations itself run on the UI thread, making it easier to handle animations and updates in a graphicacl user interface and eliminating the need for explicit synchronization in many cases.
+- JavaFX Timeline is designed to work well with the UI thread ensures animations itself run on the UI thread, making it easier to handle animations and updates in a graphicacl user interface and eliminating the need for explicit synchronization in many cases.
 - However, ball penetration through blocks issue is reduced but not resolved due to the logic of collision.
 
 ### Bug after Timeline integration
@@ -236,9 +321,3 @@ This Java project is developed using Intellij IDEA Community Edition and utilize
 - Take blocks' edges into consideration when tuning the collision detection logic. This already implemented in the collision detection logic and reduce the penetration.
 4. **Add cooldown time between collision of blocks**
 5. **Frame Rate Independent Movement** 
-
-
-
-
-
-
