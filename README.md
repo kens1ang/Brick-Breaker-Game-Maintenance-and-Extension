@@ -209,63 +209,58 @@ This Java project is developed using Intellij IDEA Community Edition and utilize
 ### GameScore
 - `Score` class has been transformed into the `GameScore` class within the `View` package.
 - This class is responsible for displaying various messages and handling their animations in the game.
-- Method Extraction: Extracted the common logic for setting the position and size of labels into the private method `setposnsizelabel`.
-- Code Simplification: Simplified the conditional expression in the show method to determine the sign of the score. Utilized `lambda` expressions to simplify code blocks with a single method call.
-- Animation Refactoring: Refactored the animation logic into a separate private method `animateLabel` for better readability. Used a `Timeline` to manage the animation frames, making the code more structured.
-- Label and Button Creation: Created private methods `createLabel` and `createButton` to abstract the creation of Label and Button instances with common properties.
-- Reuse of Logic: Reused the common logic for creating labels and buttons in the `showGameOver`, `showWin`, `showGamePaused`, and `removeGamePaused` methods.
-- EventHandler Simplification: Used `lambda` expressions to simplify the creation of `EventHandler` instances, making the code more concise.
+1. Method Extraction:
+   - Extracted the common logic for setting the position and size of labels into the private method `setposnsizelabel`.
+2. Code Simplification:
+   - Simplified the conditional expression in the show method to determine the sign of the score. Utilized `lambda` expressions to simplify code blocks with a single method call.
+3. Animation Refactoring:
+   - Refactored the animation logic into a separate private method `animateLabel` for better readability. Used a `Timeline` to manage the animation frames, making the code more structured.
+4. Label and Button Creation:
+   - Created private methods `createLabel` and `createButton` to abstract the creation of Label and Button instances with common properties.
+5. Reuse of Logic:
+   - Reused the common logic for creating labels and buttons in the `showGameOver`, `showWin`, `showGamePaused`, and `removeGamePaused` methods.
+6. EventHandler Simplification:
+   -  Used `lambda` expressions to simplify the creation of `EventHandler` instances, making the code more concise.
 
 ### GameEngine
-This class is located in `Controller` class act as one of the component of controller
-
-**1. Thread Replacement with JavaFX AnimationTimer and Timeline:**
+- This class is located in `Controller` class act as one of the component of controller
+1. **Thread Replacement with JavaFX AnimationTimer and Timeline:**
     - Replaced the usage of traditional threads with JavaFX's AnimationTimer and Timeline for better integration with JavaFX applications.
     - Introduced Timeline for the update loop and physics loop to handle periodic actions.
-
-**2. FPS Calculation:**
+2. **FPS Calculation:**
     - Instead of calculating the sleep time based on FPS, used AnimationTimer and Timeline which inherently operate with a frame rate.
-
-**3. Pause and Resume Functionality:**
+3. **Pause and Resume Functionality:**
     - Added methods for pausing and resuming the game. This was not present in the original code.
-
-**4. Initialization Logic:**
+4. **Initialization Logic:**
     - Kept the initialization logic (onAction.onInit()) in a separate method for clarity.
-
-**5. Time Tracking:**
+5. **Time Tracking:**
     - Replaced the custom time tracking logic with the use of System.currentTimeMillis().
-
-**6. Code Cleanup:**
+6. **Code Cleanup:**
     - Removed unnecessary code, such as the isStopped flag and the explicit stopping of threads using stop(). JavaFX handles the lifecycle of Timeline and AnimationTimer.
-
-**7. Public Interface:**
+7. **Public Interface:**
     - Maintained the same public interface through the OnAction interface, ensuring compatibility with the existing implementations.
-
-**8. Default FPS Value:**
+8. **Default FPS Value:**
     - Set a default value of 60 FPS for smoother animations. This can be modified using the setFps method.
-
-**9. Check for Running State:**
+9. **Check for Running State:**
     - Added a method isRunning() to check whether the game engine is currently running.
 
 ### LoadSave
-**1. Exception Handling Improvement:**
+1. **Exception Handling Improvement:**
     - Improved exception handling by using a `logger` to log specific information about the exceptions that may occur during file reading.
-  
-**2. Dynamic Save Path:**
+2. **Dynamic Save Path:**
     - In the original code, the save path was hardcoded to Main.savePath. In the refactored code, the path is obtained from `GameController.savePath`.
     - This allows for more flexibility, especially when the save path is changed or defined dynamically.
-
-**3. File Existence Check:**
+3. **File Existence Check:**
     - Removed the unnecessary check for file existence `(new File(Main.savePath))` when creating the `ObjectInputStream`.
     - It's not required because an `ObjectInputStream` can handle the absence of a file by throwing an `EOFException`.
 
 ### GameBlock
 - The class name has been changed from `Block` to `GameBlock` and moved to `GameElements` package
-**1. Refactor collision detection logic `checkhittoblock` method**
+1. **Refactor collision detection logic `checkhittoblock` method**
     - The method now accepts an additional parameter `ballRadius` to improve collision detection accuracy, considering the size of the ball.
     - The new version uses boolean checks to determine whether the ball collides with the top, bottom, left, or right edges of the block.
     - The collision detection conditions are more explicitly stated, making it clear under which circumstances the ball hits the top, bottom, left, or right of the block.
-**2. Additional Block Types**
+2. **Additional Block Types**
     - An extra block type (`BLOCK_BOMB`) has been introduced, expanding the variety of blocks in the game.
 
 ### BonusBlock
