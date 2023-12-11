@@ -39,69 +39,69 @@ This Java project is developed using Intellij IDEA Community Edition and utilize
 
 ### Dynamic Game Ball:
 1. **Initialization** (`Model` package, `GameModel` class, `setballpos` method)
-- Generate random coordinates for the ball increase the chance that the ball may spawn below the paddle as the level goes up causes instant decrement of heart.
-- Randomise game ball position cause ball spawn inside of the blocks as higher levels the number of blocks increase. 
-- The ball is initialized at a fixed position at the start of each level, strategically placed between the lowest block and the paddle.
-- `setballpos` method calculate the height of lowest block and set the position of game ball at the center between lowest block and paddle. 
+    - Generate random coordinates for the ball increase the chance that the ball may spawn below the paddle as the level goes up causes instant decrement of heart.
+    - Randomise game ball position cause ball spawn inside of the blocks as higher levels the number of blocks increase. 
+    - The ball is initialized at a fixed position at the start of each level, strategically placed between the lowest block and the paddle.
+    - `setballpos` method calculate the height of lowest block and set the position of game ball at the center between lowest block and paddle. 
 2. **Randomized Movement** (`Model` package, `GameModel` class, `randomballspawn` method)
-- Based on base code, the game ball always falls to the bottom right direction.
-- The ball's movement direction is randomized at the beginning of each level, with both horizontal and vertical directions being set randomly. (improve gaming experience)
+    - Based on base code, the game ball always falls to the bottom right direction.
+    - The ball's movement direction is randomized at the beginning of each level, with both horizontal and vertical directions being set randomly. (improve gaming experience)
 
 ### New Additional Level: 
-**Bomb blocks only final level** (`Model` package, `GameModel` class, `initboardmodel` method)
-- Intoduced a new game level where all the blocks are bomb blocks, create a challenging final level. 
-- When the level is 18, all blocks are now bomb blocks, the method `determineBlockType` has beed adjusted to handle this scenario.
+1. **Bomb blocks only final level** (`Model` package, `GameModel` class, `initboardmodel` method)
+    - Intoduced a new game level where all the blocks are bomb blocks, create a challenging final level. 
+    - When the level is 18, all blocks are now bomb blocks, the method `determineBlockType` has beed adjusted to handle this scenario.
 
 ### Smooth Label Animation:
-**Add smooth transition to label** (`View` package, `GameScore` class, `animateLabel` method)
-- The `animateLabel` method create a visual effect by smoothly adjusting the scale and opacity of a label over a specified duration and number of animation steps. 
-- Displaying score changes, game messages such as `Level Up :)`, `Score +1` etc.
+1. **Add smooth transition to label** (`View` package, `GameScore` class, `animateLabel` method)
+    - The `animateLabel` method create a visual effect by smoothly adjusting the scale and opacity of a label over a specified duration and number of animation steps. 
+    - Displaying score changes, game messages such as `Level Up :)`, `Score +1` etc.
 
 ### Gold Status Visual Effect:
-**Gold theme** (`View` package, `GameView` class, `handlegoldblockView` method)
-- When game ball hits a star block, the game responds by invoking methods to handle the visual changes associated with the Gold Status effect.
-- `checkhitnotnormalblock` to check if the game ball hit star block, if so invoke `handlegoldblockView` method.
-- `handlegoldblockView` method updates the game ball fill with new image representing gold-themed ball and modify root element's style class to apply a gold-themed background.
-- `handleremovegoldstatus` method remove gold status effects after gold time pass. 
+1. **Gold theme** (`View` package, `GameView` class, `handlegoldblockView` method)
+    - When game ball hits a star block, the game responds by invoking methods to handle the visual changes associated with the Gold Status effect.
+    - `checkhitnotnormalblock` to check if the game ball hit star block, if so invoke `handlegoldblockView` method.
+    - `handlegoldblockView` method updates the game ball fill with new image representing gold-themed ball and modify root element's style class to apply a gold-themed background.
+    - `handleremovegoldstatus` method remove gold status effects after gold time pass. 
 
 ### Sound Effects & Background Music:
 1. **SoundManager class**(`brickGame` package, `SoundManager` class)
-- Introduced SoundManager class to load `mp3` or `wav` file from `resources` and playsound methods to invoke each sound effects. 
-- Add sound effects on different action events for example, Collect bonus, Blocks hit, Game Over etc, to enchance gaming experience. Background music contributes to overall atmosphere of the game.  
+    - Introduced SoundManager class to load `mp3` or `wav` file from `resources` and playsound methods to invoke each sound effects. 
+    - Add sound effects on different action events for example, Collect bonus, Blocks hit, Game Over etc, to enchance gaming experience. Background music contributes to overall atmosphere of the game.  
 2. **Playsounds method in neccesary methods** (`Model` package, `GameModel` class)
-- Playsound methods are consistently called within all necessary methods within the `GameModel` class for example: `soundManager.playBombHitSound` in `handleBombPaddleCollisionModel` method etc.
+    - Playsound methods are consistently called within all necessary methods within the `GameModel` class for example: `soundManager.playBombHitSound` in `handleBombPaddleCollisionModel` method etc.
 
 ### Pause & Resume Game: 
 1. **Space bar key** (`Controller` package, `GameController` class, `handle`, `pauseresumeGame` methods)
-- `handle` method to receive users' input to pause or resume the game. (imporve gaming experience)
-- `pauseresumeGame` method invoked every time user press space bar, game status is checked in this method. If game is running set `isPaused` to true else false. 
+    - `handle` method to receive users' input to pause or resume the game. (imporve gaming experience)
+    - `pauseresumeGame` method invoked every time user press space bar, game status is checked in this method. If game is running set `isPaused` to true else false. 
 2. **Game engine status** (`Controller` package, `GameEngine` class, `startUpdateloop`, `startPhysicsLoop`, `StartTimeLoop` methods)
-- Boolean `isRunning` and `isPaused` in `GameEngine` class to check the game status.  
-- When `isPaused` is true, `onUpdate`, `onPhyscisUpdate`, and `onTime` stop running until `isPaused` set to false.
+    - Boolean `isRunning` and `isPaused` in `GameEngine` class to check the game status.  
+    - When `isPaused` is true, `onUpdate`, `onPhyscisUpdate`, and `onTime` stop running until `isPaused` set to false.
 
 ### New Block Type (Bomb block):
 1. **PenaltyBlock Class** (`GameElements` package, `PenaltyBlock` class)
-- Handle falling bomb object/motion when game ball hit the bomb block
-- Update the position of bomb object.
+    - Handle falling bomb object/motion when game ball hit the bomb block
+    - Update the position of bomb object.
 2. **Bomb Object Hit Paddle** (`Model` package, `GameModel` class)
-- Logic to calculate the bomb object hit the paddle
+    - Logic to calculate the bomb object hit the paddle
 3. **Sound effect when bomb hit paddle** (`brickGame` package, `SoundManager` class)
-- Invoke `playBombHitSound` method when bomb collide with paddle
+    - Invoke `playBombHitSound` method when bomb collide with paddle
 4. **Visual Effects Bomb Hit Paddle** (`View` package, `GameView` class)
-- The paddle becomes invisible for 2 seconds
-- Screen shakes as a visual effect to stimulate the impact of a bomb colliding with the paddle. 
+    - The paddle becomes invisible for 2 seconds
+    - Screen shakes as a visual effect to stimulate the impact of a bomb colliding with the paddle. 
 
 ## Implemented but Not Working Properly:
 
 ### Handle block penetration issue
 1. **Considering blocks edges in collision logic**
-- Take blocks' edges into consideration when tuning the collision detection logic.
-- This resolve the penetration when ball is bouncing from walls at a steeper angle and faster speed. However there are still penetration sometimes as stated below.
-- Overall this implemented solution resolve most of the isseus, the penetration happens occasionally in specific scenarios. 
+    - Take blocks' edges into consideration when tuning the collision detection logic.
+    - This resolve the penetration when ball is bouncing from walls at a steeper angle and faster speed. However there are still penetration sometimes as stated below.
+    - Overall this implemented solution resolve most of the issues, the penetration happens occasionally in specific scenarios. 
 2. **Ball direction move vertically up or down**:
-- In this case, sometimes the ball straight penetrate through the blocks even the velocity of ball is slow.
+    - In this case, sometimes the ball straight penetrate through the blocks even the velocity of ball is slow.
 3. **Ball bouncing between multiple blocks with high velocity**
-- In this case, sometimes the blocks beside hit block will be destroyed as well.
+    - In this case, sometimes the blocks beside hit block will be destroyed as well.
 
 ## Features Not Implemented:
 
@@ -220,53 +220,53 @@ This Java project is developed using Intellij IDEA Community Edition and utilize
 This class is located in `Controller` class act as one of the component of controller
 
 **1. Thread Replacement with JavaFX AnimationTimer and Timeline:**
-- Replaced the usage of traditional threads with JavaFX's AnimationTimer and Timeline for better integration with JavaFX applications.
-- Introduced Timeline for the update loop and physics loop to handle periodic actions.
+    - Replaced the usage of traditional threads with JavaFX's AnimationTimer and Timeline for better integration with JavaFX applications.
+    - Introduced Timeline for the update loop and physics loop to handle periodic actions.
 
 **2. FPS Calculation:**
-- Instead of calculating the sleep time based on FPS, used AnimationTimer and Timeline which inherently operate with a frame rate.
+    - Instead of calculating the sleep time based on FPS, used AnimationTimer and Timeline which inherently operate with a frame rate.
 
 **3. Pause and Resume Functionality:**
-- Added methods for pausing and resuming the game. This was not present in the original code.
+    - Added methods for pausing and resuming the game. This was not present in the original code.
 
 **4. Initialization Logic:**
-- Kept the initialization logic (onAction.onInit()) in a separate method for clarity.
+    - Kept the initialization logic (onAction.onInit()) in a separate method for clarity.
 
 **5. Time Tracking:**
-- Replaced the custom time tracking logic with the use of System.currentTimeMillis().
+    - Replaced the custom time tracking logic with the use of System.currentTimeMillis().
 
 **6. Code Cleanup:**
-- Removed unnecessary code, such as the isStopped flag and the explicit stopping of threads using stop(). JavaFX handles the lifecycle of Timeline and AnimationTimer.
+    - Removed unnecessary code, such as the isStopped flag and the explicit stopping of threads using stop(). JavaFX handles the lifecycle of Timeline and AnimationTimer.
 
 **7. Public Interface:**
-- Maintained the same public interface through the OnAction interface, ensuring compatibility with the existing implementations.
+    - Maintained the same public interface through the OnAction interface, ensuring compatibility with the existing implementations.
 
 **8. Default FPS Value:**
-- Set a default value of 60 FPS for smoother animations. This can be modified using the setFps method.
+    - Set a default value of 60 FPS for smoother animations. This can be modified using the setFps method.
 
 **9. Check for Running State:**
-- Added a method isRunning() to check whether the game engine is currently running.
+    - Added a method isRunning() to check whether the game engine is currently running.
 
 ### LoadSave
 **1. Exception Handling Improvement:**
-- Improved exception handling by using a `logger` to log specific information about the exceptions that may occur during file reading.
+    - Improved exception handling by using a `logger` to log specific information about the exceptions that may occur during file reading.
   
 **2. Dynamic Save Path:**
-- In the original code, the save path was hardcoded to Main.savePath. In the refactored code, the path is obtained from `GameController.savePath`.
-- This allows for more flexibility, especially when the save path is changed or defined dynamically.
+    - In the original code, the save path was hardcoded to Main.savePath. In the refactored code, the path is obtained from `GameController.savePath`.
+    - This allows for more flexibility, especially when the save path is changed or defined dynamically.
 
 **3. File Existence Check:**
-- Removed the unnecessary check for file existence `(new File(Main.savePath))` when creating the `ObjectInputStream`.
-- It's not required because an `ObjectInputStream` can handle the absence of a file by throwing an `EOFException`.
+    - Removed the unnecessary check for file existence `(new File(Main.savePath))` when creating the `ObjectInputStream`.
+    - It's not required because an `ObjectInputStream` can handle the absence of a file by throwing an `EOFException`.
 
 ### GameBlock
 - The class name has been changed from `Block` to `GameBlock` and moved to `GameElements` package
 **1. Refactor collision detection logic `checkhittoblock` method**
-- The method now accepts an additional parameter `ballRadius` to improve collision detection accuracy, considering the size of the ball.
-- The new version uses boolean checks to determine whether the ball collides with the top, bottom, left, or right edges of the block.
-- The collision detection conditions are more explicitly stated, making it clear under which circumstances the ball hits the top, bottom, left, or right of the block.
+    - The method now accepts an additional parameter `ballRadius` to improve collision detection accuracy, considering the size of the ball.
+    - The new version uses boolean checks to determine whether the ball collides with the top, bottom, left, or right edges of the block.
+    - The collision detection conditions are more explicitly stated, making it clear under which circumstances the ball hits the top, bottom, left, or right of the block.
 **2. Additional Block Types**
-- An extra block type (`BLOCK_BOMB`) has been introduced, expanding the variety of blocks in the game.
+    - An extra block type (`BLOCK_BOMB`) has been introduced, expanding the variety of blocks in the game.
 
 ### BonusBlock
 - In the refactored code, the `Bonus` class has been renamed to `BonusBlock` to follow a more consistent naming convention with other classes in the project. 
@@ -284,23 +284,23 @@ This class is located in `Controller` class act as one of the component of contr
 
 ### Game Ball Move Beyond the Walls:
 1. **Reset collide flag** (`Model` package, `GameModel` class, `handleWallCollisions` method)
-- Call `resetCollisionFlags` every time the ball hits the wall.
+    - Call `resetCollisionFlags` every time the ball hits the wall.
 2. **Accurate collisions** (`Model` package, `GameModel` class, `handleWallCollisions` method)
-- Take ball radius into consideration when collide with walls, paddle and blocks.
+    - Take ball radius into consideration when collide with walls, paddle and blocks.
 
 ### Paddle Movement Delayed & Move Beyond `sceneWidth`:
-**Replace thread with Timeline** (`Model` package, `GameModel` class, `move` method)
-- There is delay on paddle movement and sometimes it moves beyond the scenewidth when handled using separate thread. 
-- This is because when using `Thread`, code inside thread runs on separate thread from the UI thread which might run into synchronization issues.
-- `Timeline` ensures that keyframes and animations are executed on the UI thread. (smoother paddle movement)
+1. **Replace thread with Timeline** (`Model` package, `GameModel` class, `move` method)
+    - There is delay on paddle movement and sometimes it moves beyond the scenewidth when handled using separate thread. 
+    - This is because when using `Thread`, code inside thread runs on separate thread from the UI thread which might run into synchronization issues.
+    - `Timeline` ensures that keyframes and animations are executed on the UI thread. (smoother paddle movement)
 
 ### Thread Related Issues 
 1. **Shared data in multi-threaded environment**:
-- When multiple threads are involved, it's crucial to synchronize access to shared resources. There are bugs and erros such as label `+1` still displaying after block is destroyed, ball penetrating through blocks frequently, concurrent errors etc
-- The issues occur due to lack of synchronization in the code, multiple threads access shared data wihtout proper synchronization
+    - When multiple threads are involved, it's crucial to synchronize access to shared resources. There are bugs and erros such as label `+1` still displaying after block is destroyed, ball penetrating through blocks frequently, concurrent errors etc
+    - The issues occur due to lack of synchronization in the code, multiple threads access shared data wihtout proper synchronization
 2. **Timeline Integration in `GameEngine` class**:
-- JavaFX Timeline is designed to work well with the UI thread ensures animations itself run on the UI thread, making it easier to handle animations and updates in a graphicacl user interface and eliminating the need for explicit synchronization in many cases.
-- However, ball penetration through blocks issue is reduced but not resolved due to the logic of collision.
+    - JavaFX Timeline is designed to work well with the UI thread ensures animations itself run on the UI thread, making it easier to handle animations and updates in a graphicacl user interface and eliminating the need for explicit synchronization in many cases.
+    - However, ball penetration through blocks issue is reduced but not resolved due to the logic of collision.
 
 ### Bug after Timeline integration
 - `nextLevel` method in `checkdestroyedcount` method, `checkdestroyedcount` method in `onPhysicsUpdate` method.
@@ -308,16 +308,16 @@ This class is located in `Controller` class act as one of the component of contr
 - Based on my understanding is `onPhysicsUpdate` method is invoked twice as new `Timeline` is created at the end of level and start of new level.
 - Due to the invocation of the `onPhysicsUpdate` method occurring twice, it results in the `nextLevel` method being triggered twice as well.
 1. **Add a boolean flag `leveldone`**
-- This boolean is only set to true only `nextLevel` method is invoked and in reset to false in `nextLevel` method.
-- This ensure that the `nextLevel` method can only invoke one time.
+    - This boolean is only set to true only `nextLevel` method is invoked and in reset to false in `nextLevel` method.
+    - This ensure that the `nextLevel` method can only invoke one time.
 
 ### Game Ball Penetration Thrrough Blocks
 1. **Ball direction move vertically up or down**:
-- In this case, sometimes the ball straight penetrate through the blocks even the velocity of ball is slow.
+    - In this case, sometimes the ball straight penetrate through the blocks even the velocity of ball is slow.
 2. **Ball bouncing between multiple blocks with high velocity**
-- In this case, sometimes the blocks beside hit block will be destroyed as well.
-- This is because when ball hit a blocks but didnt bounce immediately and bounce when the ball is already inside the blocks and due to the bouncing angle hit the blocks beside, seems like the ball is penetrating.
+    - In this case, sometimes the blocks beside hit block will be destroyed as well.
+    - This is because when ball hit a blocks but didnt bounce immediately and bounce when the ball is already inside the blocks and due to the bouncing angle hit the blocks beside, seems like the ball is penetrating.
 3. **Considering blocks edges in collision logic**
-- Take blocks' edges into consideration when tuning the collision detection logic. This already implemented in the collision detection logic and reduce the penetration.
+    - Take blocks' edges into consideration when tuning the collision detection logic. This already implemented in the collision detection logic and reduce the penetration.
 4. **Add cooldown time between collision of blocks**
 5. **Frame Rate Independent Movement** 
