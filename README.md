@@ -25,16 +25,15 @@ This Java project is developed using Intellij IDEA Community Edition and utilize
 4. Run the `Main` class to start the Brick Breaker Game.
 
 ### Game Controls:
-- Press "Start Game" to begin playing.
-- Press "Load Game" to load previous saved game.
-- Use the left and right arrow keys to move the paddle.
-- Press space bar to pause or resume the game.
-- Press s to save game. 
+- Press "Start Game" button to begin playing.
+- Press "Load Game" button to load previous saved game.
+- Use the `left` and `right` arrow keys to move the paddle.
+- Press `space bar` to pause or resume the game.
+- Press `s` to save game. 
     
 **NOTES:**
 - There should be no JavaFX errors and the game should be able to run.
 - If the errors still exist, kindly remove and add the library again by following the steps above.
-
 
 ## Implemented and Working Properly:
 
@@ -92,24 +91,123 @@ This Java project is developed using Intellij IDEA Community Edition and utilize
 - The paddle becomes invisible for 2 seconds
 - Screen shakes as a visual effect to stimulate the impact of a bomb colliding with the paddle. 
 
-## Implemented but Not Working Properly
+## Implemented but Not Working Properly:
 
-## Features Not Implemented
+### Handle block penetration issue
+1. **Considering blocks edges in collision logic**
+- Take blocks' edges into consideration when tuning the collision detection logic.
+- This resolve the penetration when ball is bouncing from walls at a steeper angle and faster speed. However there are still penetration sometimes as stated below.
+- Overall this implemented solution resolve most of the isseus, the penetration happens occasionally in specific scenarios. 
+2. **Ball direction move vertically up or down**:
+- In this case, sometimes the ball straight penetrate through the blocks even the velocity of ball is slow.
+3. **Ball bouncing between multiple blocks with high velocity**
+- In this case, sometimes the blocks beside hit block will be destroyed as well.
 
-## New Java Classes
+## Features Not Implemented:
 
-## Modified Java Classes
+### Main Menu / Start Page
+- Limited development time and focusing on core gameplay elements and refactoring the code
+- Design interface might considered outside of the scope of this project
+  
+### Multiball
+- Limited development time for this complex features and this features require lot of development effort as functionality is complex considerating ball physics, collisions and user interaction
+- Mulitiple features could introduce new challenges in testing, debugging and refactoring
+- Require a lot of adjustment on the provided base code, and this decisions might need to refine existing features
+
+## New Java Classes:
+
+### GameModel
+- This class located in `Model` package
+- `GameModel` class contains object instances of `GameBall`,`GamePaddle`, and `SoundManager` class and have direct access with these classes.
+- This class does not have direct knowledge of `GameView` and `GameController` class.
+- The primary class responsible for managing the game's logic, state, and various game elements such as the ball, paddle, blocks, and bonuses.
+- Manages the game state, including the level, score, and heart count.
+- Handles the initialization of game elements such as the ball, paddle, and blocks.
+- Updates the position of the ball, checks for collisions, and manages game logic.
+- Manages bonus and penalty blocks, including their interactions with the paddle.
+- Handles sound effects and manages the game's audio.
+  
+### GameBall
+- This class located in `Model` package
+- This `GameBall` class is part of the model component in the Model-View-Controller (MVC) architecture.
+- The `GameBall` class is responsible for encapsulating the properties and behavior of the game ball.
+- It stores information about the ball's position (xBall and yBall), its movement direction (goDownBall and goRightBall), and provides methods to update its position.
+- `incxBall`, `drexBall`, `incyBall`, `dreyBall`: Methods to update the ball's position based on its movement.
+- `setGoDownBall` and `setGoRightBall`: Methods to set the direction of the ball's movement.
+- `isGoRightBall` and `isGoDownBall`: Methods to query the direction of the ball's movement.
+
+### GamePaddle
+- This class located in `Model` package
+- This `GamePaddle` class is part of the model component in the Model-View-Controller (MVC) architecture.
+- The `GamePaddle` class is responsible for encapsulating the properties and behavior of the paddle within the Brick Breaker game.
+- It stores information about the paddle's position (xBreak and yBreak), its width (breakWidth), and provides methods to update its position.
+- `centerBreakX`: Represents the horizontal center of the paddle.
+- `xBreak` and `yBreak`: Represent the current coordinates of the top-left corner of the paddle.
+- `breakWidth` and `breakHeight`: Define the dimensions of the paddle.
+- `addxBreak` and `minusxBreak`: Methods to increment and decrement the horizontal position of the paddle.
+- `getHalfBreakWidth`: Returns half of the paddle's width.
+- `setxBreak`, `setCenterBreakX`, `setyBreak`: Methods to set the position of the paddle.
+
+### SoundManager
+- This class located in `Model` package
+- The `SoundManager` class in the Model package is responsible for managing and playing various sounds
+- The `SoundManager` is part of the model component, and it can be accessed by other components, such as the controller or even the view, if necessary.
+- The `SoundManager` class encapsulates the functionality related to game sounds.
+- It provides methods to play different sounds such as bomb hits, bonus collections, heart collections, level-ups, block hits, and more. It also manages the background music.
+- `MediaPlayer` objects for various sounds like bomb hit, bonus collection, heart collection, level-up, block hit, and more.
+- `backgroundMusic`: MediaPlayer for the background music.
+- `isBackgroundMusicPlaying`: A boolean flag to track whether background music is currently playing.
+- `initSounds`: Initializes MediaPlayer objects for each sound by loading sound files.
+- `loadSound`: Loads a sound file and returns a MediaPlayer object.
+- Methods like `playBombHitSound`, `playCollectBonusSound`, etc.: Play the corresponding sounds.
+- `playBackgroundMusic`: Plays the background music in a loop.
+- `pauseBackgroundMusic`: Pauses the background music.
+- `resumeBackgroundMusic`: Resumes the background music.
+- `playSound`: General method to play a sound, stopping it if it's already playing.
+
+### GameController
+- The `GameController` class in the Controller package
+- It handles user input, manages the game state, and interacts with both the model (`GameModel`) and the view (`GameView`).
+- model: An instance of the `GameModel` class, representing the game's underlying data and logic.
+- view: An instance of the `GameView` class, representing the visual aspects of the game.
+- It handles events such as key presses, manages game state transitions, and orchestrates the game engine etc.
+- `start`: Initializes and starts the game, setting up the initial game elements, initializing the view, and handling user input.
+- `saveGame`, `loadGame`: Methods for saving and loading the game state.
+- `nextLevel`: Moves to the next level of the game.
+- `restartGame`: Restarts the game with initial settings.
+- `onUpdate`, `onPhysicsUpdate`, `onInit`, `onTime`: Methods implementing the `OnAction` interface for game engine callbacks.
+
+### GameView
+### PenaltyBlock
+
+## Modified Java Classes:
+
+### Main
+### GameScore
+### GameEngine
+### LoadSave
+### BonusBlock
 
 ## Unexpected Problems:
-
+  
 ### Unable to Save Game:
 - Adjusted the save path from D drive to C drive to ensure that the game is stored in the correct location.
+
+### Load game issue:
+- After load the saved game, after all blocks are destroyed the level doesnt proceed to next level.
+- This issue resolved by adding a variable `initialblockcount` to calculate the number of blocks remaining from saved game and compare with `destroyedblockcount` to check whether all the blocks are destroyed. 
 
 ### Game Ball Move Beyond the Walls:
 1. **Reset collide flag** (`Model` package, `GameModel` class, `handleWallCollisions` method)
 - Call `resetCollisionFlags` every time the ball hits the wall.
 2. **Accurate collisions** (`Model` package, `GameModel` class, `handleWallCollisions` method)
 - Take ball radius into consideration when collide with walls, paddle and blocks.
+
+### Paddle Movement Delayed & Move Beyond `sceneWidth`:
+**Replace thread with Timeline** (`Model` package, `GameModel` class, `move` method)
+- There is delay on paddle movement and sometimes it moves beyond the scenewidth when handled using separate thread. 
+- This is because when using `Thread`, code inside thread runs on separate thread from the UI thread which might run into synchronization issues.
+- `Timeline` ensures that keyframes and animations are executed on the UI thread. (smoother paddle movement)
 
 ### Thread Related Issues 
 1. **Shared data in multi-threaded environment**:
@@ -119,17 +217,27 @@ This Java project is developed using Intellij IDEA Community Edition and utilize
 - JavaFX Timeline is designed to work well with the UI thread ensures that the animations itself run on the UI thread, making it easier to handle animations and updates in a graphicacl user interface and eliminating the need for explicit synchronization in many cases.
 - However, ball penetration through blocks issue is reduced but not resolved due to the logic of collision.
 
+### Bug after Timeline integration
+- `nextLevel` method in `checkdestroyedcount` method, `checkdestroyedcount` method in `onPhysicsUpdate` method.
+- After integration `Timeline` instead of `Thread` in `GameEngine` class, the level proceed twice after all blocks destroyed for example, level 1 straight jump to level 3.
+- Based on my understanding is `onPhysicsUpdate` method is invoked twice as new `Timeline` is created at the end of level and start of new level.
+- Due to the invocation of the `onPhysicsUpdate` method occurring twice, it results in the `nextLevel` method being triggered twice as well.
+1. **Add a boolean flag `leveldone`**
+- This boolean is only set to true only `nextLevel` method is invoked and in reset to false in `nextLevel` method.
+- This ensure that the `nextLevel` method can only invoke one time.
+
 ### Game Ball Penetration Thrrough Blocks
 1. **Ball direction move vertically up or down**:
-- In this case, the ball straight penetrate through the blocks even the velocity of ball is slow.
-2. **
+- In this case, sometimes the ball straight penetrate through the blocks even the velocity of ball is slow.
+2. **Ball bouncing between multiple blocks with high velocity**
+- In this case, sometimes the blocks beside hit block will be destroyed as well.
+- This is because when ball hit a blocks but didnt bounce immediately and bounce when the ball is already inside the blocks and due to the bouncing angle hit the blocks beside, seems like the ball is penetrating.
+3. **Considering blocks edges in collision logic**
+- Take blocks' edges into consideration when tuning the collision detection logic. This already implemented in the collision detection logic and reduce the penetration.
+4. **Add cooldown time between collision of blocks**
+5. **Frame Rate Independent Movement** 
 
 
-### Paddle Movement Delayed & Move Beyond `sceneWidth`:
-**Replace thread with Timeline** (`Model` package, `GameModel` class, `move` method)
-- There is delay on paddle movement and sometimes it moves beyond the scenewidth when handled using separate thread. 
-- This is because when using `Thread`, code inside thread runs on separate thread from the UI thread which might run into synchronization issues.
-- `Timeline` ensures that keyframes and animations are executed on the UI thread. (smoother paddle movement)
 
 
 
