@@ -314,5 +314,6 @@ This Java project is developed using Intellij IDEA Community Edition and utilize
     - This is because when ball hit a blocks but didnt bounce immediately and bounce when the ball is already inside the blocks and due to the bouncing angle hit the blocks beside, seems like the ball is penetrating.
 3. **Considering blocks edges in collision logic**
     - Take blocks' edges into consideration when tuning the collision detection logic. This already implemented in the collision detection logic and reduce the penetration.
-4. **Add cooldown time between collision of blocks**
-5. **Frame Rate Independent Movement** 
+4. **Attempted implementation to solve the issus**
+    - Add cooldown time between collision of blocks**
+    - Frame Rate Independent Movement** 
