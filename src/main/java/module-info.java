@@ -6,12 +6,12 @@ module brickGame {
 
     opens brickGame to javafx.fxml;
     exports brickGame;
-    exports Model;
-    opens Model to javafx.fxml;
-    exports View;
-    opens View to javafx.fxml;
-    exports Controller;
-    opens Controller to javafx.fxml;
-    exports GameElements;
-    opens GameElements to javafx.fxml;
+    exports brickGame.Model;
+    opens brickGame.Model to javafx.fxml;
+    exports brickGame.View;
+    opens brickGame.View to javafx.fxml;
+    exports brickGame.Controller;
+    opens brickGame.Controller to javafx.fxml;
+    exports brickGame.Model.GameElements;
+    opens brickGame.Model.GameElements to javafx.fxml;
 }
