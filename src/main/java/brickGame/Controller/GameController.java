@@ -301,7 +301,7 @@ public class GameController implements EventHandler<KeyEvent>, GameEngine.OnActi
             model.initchocobombModel();
         });
         handlenotnormalblock();
-        model.getSoundManager().playBackgroundMusic(0.2);
+        model.getSoundManager().playBackgroundMusic(0.5);
     }
     /**
      * Handles interactions with non-normal blocks when the ball is within the appropriate vertical range.
