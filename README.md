@@ -118,10 +118,10 @@ This Java project is developed using Intellij IDEA Community Edition and utilize
 
 ### GameModel
 - This class located in `Model` package
-- `GameModel` class contains object instances of `GameBall`,`GamePaddle`, and `SoundManager` class and have direct access with these classes.
+- `GameModel` class contains object instances of `GameBall`,`GamePaddle`, `LoadSave`, and `SoundManager` class and have direct access with these classes.
 - This class does not have direct knowledge of `GameView` and `GameController` class.
 - The primary class responsible for managing the game's logic, state, and various game elements such as the ball, paddle, blocks, and bonuses.
-- Manages the game state, including the level, score, and heart count.
+- Manages the game state, including the level, score, save game state, load game state and heart count.
 - Handles the initialization of game elements such as the ball, paddle, and blocks.
 - Updates the position of the ball, checks for collisions, and manages game logic.
 - Manages bonus and penalty blocks, including their interactions with the paddle.
@@ -185,7 +185,7 @@ This Java project is developed using Intellij IDEA Community Edition and utilize
 - The class uses JavaFX animations, such as screen shaking and transitions, to enhance the user experience.
 
 ### PenaltyBlock
-- The `PenaltyBlock` class in the `GameElements` package
+- The `PenaltyBlock` class in the `Model.GameElements` package
 - The `PenaltyBlock` class is responsible for creating and managing penalty blocks that fall down the game screen. When the ball collides with a paddle, these blocks trigger a penalty event.
 - `bomb`: A Rectangle representing the penalty block.
 - `x`, `y`: The coordinates of the penalty block.
@@ -245,6 +245,7 @@ This Java project is developed using Intellij IDEA Community Edition and utilize
     - Added a method isRunning() to check whether the game engine is currently running.
 
 ### LoadSave
+- This class is located in `Model` package
 1. **Exception Handling Improvement:**
     - Improved exception handling by using a `logger` to log specific information about the exceptions that may occur during file reading.
 2. **Dynamic Save Path:**
@@ -255,7 +256,7 @@ This Java project is developed using Intellij IDEA Community Edition and utilize
     - It's not required because an `ObjectInputStream` can handle the absence of a file by throwing an `EOFException`.
 
 ### GameBlock
-- The class name has been changed from `Block` to `GameBlock` and moved to `GameElements` package
+- The class name has been changed from `Block` to `GameBlock` and moved to `Model.GameElements` package
 1. **Refactor collision detection logic `checkhittoblock` method**
     - The method now accepts an additional parameter `ballRadius` to improve collision detection accuracy, considering the size of the ball.
     - The new version uses boolean checks to determine whether the ball collides with the top, bottom, left, or right edges of the block.
@@ -264,18 +265,33 @@ This Java project is developed using Intellij IDEA Community Edition and utilize
     - An extra block type (`BLOCK_BOMB`) has been introduced, expanding the variety of blocks in the game.
 
 ### BonusBlock
+- This class moved to `Model.GameElements` package
 - In the refactored code, the `Bonus` class has been renamed to `BonusBlock` to follow a more consistent naming convention with other classes in the project. 
 - Additionally, the class has been moved to the `GameElements` package to organize related game elements. 
 - The structure of the code remains similar to the original, with minor improvements for better readability and maintainability.
 
+### BlockSerializable
+- This class moved to `Model.GameElements` package
+- Added an additional field `colorIndex` to store the index of the color in the colors array.
+- Updated the constructor to include the `colorIndex` parameter.
+  
 ## Unexpected Problems:
   
 ### Unable to Save Game:
 - Adjusted the save path from D drive to C drive to ensure that the game is stored in the correct location.
 
 ### Load game issue:
-- After load the saved game, after all blocks are destroyed the level doesnt proceed to next level.
-- This issue resolved by adding a variable `initialblockcount` to calculate the number of blocks remaining from saved game and compare with `destroyedblockcount` to check whether all the blocks are destroyed. 
+1. After load the saved game, after all blocks are destroyed the level **doesnt proceed to next level**.
+    - This issue resolved by adding a variable `initialblockcount` to calculate the number of blocks remaining from saved game and compare with `destroyedblockcount` to check whether all the blocks are destroyed.
+2. **The colors of blocks is not saved**
+    - Added an additional field `colorIndex` to the `BlockSerializable` class to store the index of the color in the colors array.
+    - Updated the constructor to include the `colorIndex` parameter.
+    - Instead of storing the entire `Color` object, the `colorIndex` is calculated using a helper method `getColorIndex`.
+    - The `colorIndex` is then stored in the `BlockSerializable` instances.
+    - During loading, the `colorIndex` is retrieved from the `BlockSerializable` instances and used to fetch the corresponding color from the colors array.
+    - A helper method `getColorIndex` was added to the `GameModel` class to find the index of a given color in the colors array.
+3. Another issues in loaded game is the `goldstatus` will not be saved.
+    - This issue is not resolved because of time constraints. 
 
 ### Game Ball Move Beyond the Walls:
 1. **Reset collide flag** (`Model` package, `GameModel` class, `handleWallCollisions` method)
