@@ -112,7 +112,6 @@ public class GameModel {
      * Populates the 'blocks' list with instances of GameBlock.
      */
     public void initBoardModel() {
-        level=18;
         Random random = new Random();
 
         for (int i = 0; i < 4; i++) {
