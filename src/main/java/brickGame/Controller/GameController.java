@@ -244,7 +244,7 @@ public class GameController implements EventHandler<KeyEvent>, GameEngine.OnActi
     private void nextLevel() {
         Platform.runLater(() -> {
             try {
-                model.setvX(1.000);
+                model.setvX(2.000);
                 engine.stop();
                 model.resetCollisionFlags();
                 model.getBallob().setGoDownBall(true);
@@ -274,7 +274,7 @@ public class GameController implements EventHandler<KeyEvent>, GameEngine.OnActi
             model.setLevel(0);
             model.setHeart(5);
             model.setScore(0);
-            model.setvX(1.000);
+            model.setvX(2.000);
             model.setDestroyedBlockCount(0);
             model.resetCollisionFlags();
             model.getBallob().setGoDownBall(true);
@@ -301,7 +301,7 @@ public class GameController implements EventHandler<KeyEvent>, GameEngine.OnActi
             model.initchocobombModel();
         });
         handlenotnormalblock();
-        model.getSoundManager().playBackgroundMusic();
+        model.getSoundManager().playBackgroundMusic(0.2);
     }
     /**
      * Handles interactions with non-normal blocks when the ball is within the appropriate vertical range.

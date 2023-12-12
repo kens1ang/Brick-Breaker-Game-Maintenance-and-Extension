@@ -119,9 +119,10 @@ public class SoundManager {
     /**
      * Plays the background music continuously.
      */
-    public void playBackgroundMusic() {
+    public void playBackgroundMusic(double volume) {
         if (backgroundMusic != null) {
             backgroundMusic.setCycleCount(MediaPlayer.INDEFINITE);
+            backgroundMusic.setVolume(volume);
             backgroundMusic.play();
             isBackgroundMusicPlaying = true;
         }

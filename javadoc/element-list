@@ -1,6 +1,0 @@
-module:brickGame
-brickGame
-brickGame.Controller
-brickGame.Model
-brickGame.Model.GameElements
-brickGame.View

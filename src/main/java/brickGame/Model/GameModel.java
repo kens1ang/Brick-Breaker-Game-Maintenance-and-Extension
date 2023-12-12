@@ -17,7 +17,7 @@ public class GameModel {
     private final GamePaddle paddle;
     private final SoundManager soundManager;
     private final LoadSave loadSave;
-    private int  heart = 100;
+    private int  heart = 5;
     private int level = 0;
     private int score = 0;
     private long time = 0;
@@ -112,6 +112,7 @@ public class GameModel {
      * Populates the 'blocks' list with instances of GameBlock.
      */
     public void initBoardModel() {
+        level=18;
         Random random = new Random();
 
         for (int i = 0; i < 4; i++) {
